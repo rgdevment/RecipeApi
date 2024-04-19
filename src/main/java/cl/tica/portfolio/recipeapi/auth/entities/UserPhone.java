@@ -28,10 +28,11 @@ public class UserPhone extends UserAudit {
 
     @NotNull
     @Column(nullable = false)
-    private boolean primary;
+    private boolean isPrimary;
 
+    @NotNull
     @Column(nullable = false)
-    private boolean verified = false;
+    private boolean isVerified = false;
 
     @NotNull
     @Enumerated(EnumType.STRING)

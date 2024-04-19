@@ -11,7 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_emails")
+@Table(name = "user_emails", indexes = {
+        @Index(name = "idx_email", columnList = "email")
+})
 public class UserEmail extends UserAudit {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -28,10 +30,11 @@ public class UserEmail extends UserAudit {
 
     @NotNull
     @Column(nullable = false)
-    private boolean primary;
+    private boolean isPrimary;
 
+    @NotNull
     @Column(nullable = false)
-    private boolean verified = false;
+    private boolean isVerified = false;
 
     @NotNull
     @Enumerated(EnumType.STRING)

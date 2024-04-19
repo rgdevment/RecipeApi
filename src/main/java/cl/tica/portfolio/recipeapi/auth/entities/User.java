@@ -11,7 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_username", columnList = "username")
+})
 public class User extends UserAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +29,7 @@ public class User extends UserAudit {
 
     @NotNull
     @Column(nullable = false)
-    private boolean enabled = false; //activate with token confirmation
+    private boolean isEnabled = false; //activate with token confirmation
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserInformation userInformation;
