@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'checkstyle'
 }
 
 group = 'cl.tica.portfolio'
@@ -33,6 +34,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+checkstyle {
+    toolVersion = '10.15.0'
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+check.dependsOn checkstyleMain
