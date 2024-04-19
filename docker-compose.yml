@@ -2,12 +2,13 @@ version: '3.9'
 
 services:
   postgres:
+    container_name: recipe_postgres
     image: postgres:16.2-alpine
     ports:
-      - "5432:5432"
+      - "54321:5432"
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - ~/databases/postgres/recipe:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=MyPr35m1umS35cr35t
+      - POSTGRES_PASSWORD=S3cr3t0
       - POSTGRES_USER=recipe
-      - POSTGRES_DB=recipe_api
+      - POSTGRES_DB=db_recipe
