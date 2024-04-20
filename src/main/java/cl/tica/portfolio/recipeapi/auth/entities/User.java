@@ -19,6 +19,7 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,15 +39,18 @@ public class User {
     private Long id;
 
     @NotEmpty
+    @Size(max = 30)
     @Column(nullable = false, unique = true)
     private String username;
 
     @NotEmpty
+    @Size(max = 50)
     @Email
     @Column(nullable = false, unique = true)
     private String email;
 
     @NotEmpty
+    @Size(max = 120)
     @Column(nullable = false)
     private String password;
 
