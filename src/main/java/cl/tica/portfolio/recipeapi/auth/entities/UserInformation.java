@@ -10,15 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user_information")
+@Table(name = "users_information")
 public class UserInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,11 +35,6 @@ public class UserInformation {
     @Column(nullable = false)
     private String lastname;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     private GenderType gender;
-
-    @NotNull
-    @Column(nullable = false)
-    private LocalDate birthdate;
 }
