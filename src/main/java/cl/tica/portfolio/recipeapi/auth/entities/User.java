@@ -64,11 +64,11 @@ public class User {
 
     @NotNull
     @Column(nullable = false)
-    private boolean isEnabled = false; //activate with token confirmation or email
+    private boolean isAccountEnabled = false; //activate with token confirmation or email
 
     @NotNull
     @Column(nullable = false)
-    private boolean isEmailConfirmed = false;
+    private boolean isEmailConfirmed = false; //verify email by link confirmation
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
