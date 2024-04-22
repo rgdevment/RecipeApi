@@ -151,7 +151,7 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "{id=%d, username='%s', email='%s', roles=%s, userData=%s, createdAt=%s, updatedAt=%s}",
-                getId(), getUsername(), getEmail(), getRoles(), getUserData(), createdAt, updatedAt);
+                "{username='%s', email='%s', roles=%s, user_data=%s, account_enabled=%s, email_confirmed=%s, created_at=%s, updated_at=%s}",
+                getUsername(), getEmail(), getRoles(), getUserData(), isAccountEnabled(), isEmailVerified(), createdAt, updatedAt);
     }
 }
