@@ -65,19 +65,24 @@ public class User {
 
     @NotNull
     @Column(nullable = false)
-    private boolean isAccountEnabled = false; //activate with token confirmation or email
+    private boolean accountEnabled = false; //unlock with email verification
 
     @NotNull
     @Column(nullable = false)
-    private boolean isEmailVerified = false; //verify email by link confirmation
+    private boolean accountLocked = false;
+
+    @NotNull
+    @Column(nullable = false)
+    private boolean emailVerified = false; //verify email by link confirmation
 
     @Column(nullable = false, updatable = false)
-    protected LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    protected LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -121,31 +126,44 @@ public class User {
     }
 
     public boolean isAccountEnabled() {
-        return isAccountEnabled;
+        return accountEnabled;
     }
 
-    public boolean isEmailVerified() {
-        return isEmailVerified;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setEmailVerified(boolean emailVerified) {
-        isEmailVerified = emailVerified;
-    }
-
-    public void setAccountEnabled(boolean accountEnabled) {
-        isAccountEnabled = accountEnabled;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
+    public void setRoles(List<Role> roles) {
+        this.roles.clear();
+        this.roles.addAll(roles);
     }
 
     public void addRole(Role role) {
         this.roles.add(role);
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public boolean isAccountLocked() {
+        return accountLocked;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setAccountEnabled(boolean accountEnabled) {
+        this.accountEnabled = accountEnabled;
+    }
+
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
     @Override

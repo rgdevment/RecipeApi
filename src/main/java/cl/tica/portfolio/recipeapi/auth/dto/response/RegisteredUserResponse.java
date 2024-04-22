@@ -9,4 +9,5 @@ public record RegisteredUserResponse(
         String username,
         String email,
         List<Role> roles
-) {}
+) {
+}

@@ -1,8 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
-import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
-import cl.tica.portfolio.recipeapi.auth.dto.response.MessageResponse;
 import cl.tica.portfolio.recipeapi.auth.dto.response.RegisteredUserResponse;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistsException;
@@ -41,15 +39,5 @@ public class AuthController {
                 userRecord.getEmail(),
                 userRecord.getRoles()
         ));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<MessageResponse> authenticateUser(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(new MessageResponse("Login successful!"));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<MessageResponse> logoutUser() {
-        return ResponseEntity.ok(new MessageResponse("Logout successful!"));
     }
 }
