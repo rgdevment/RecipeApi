@@ -1,4 +1,4 @@
-package cl.tica.portfolio.recipeapi.auth.services;
+package cl.tica.portfolio.recipeapi.auth.security.services;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;

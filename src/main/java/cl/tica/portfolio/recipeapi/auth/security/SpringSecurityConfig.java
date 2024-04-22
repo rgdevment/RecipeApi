@@ -1,7 +1,7 @@
-package cl.tica.portfolio.recipeapi.auth.secutiry;
+package cl.tica.portfolio.recipeapi.auth.security;
 
-import cl.tica.portfolio.recipeapi.auth.secutiry.filters.JwtAuthenticationFilter;
-import cl.tica.portfolio.recipeapi.auth.secutiry.filters.JwtValidationFilter;
+import cl.tica.portfolio.recipeapi.auth.security.jwt.filters.JwtAuthenticationFilter;
+import cl.tica.portfolio.recipeapi.auth.security.jwt.filters.JwtValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

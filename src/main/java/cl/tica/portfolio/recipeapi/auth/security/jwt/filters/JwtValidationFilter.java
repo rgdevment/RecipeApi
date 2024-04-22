@@ -1,6 +1,6 @@
-package cl.tica.portfolio.recipeapi.auth.secutiry.filters;
+package cl.tica.portfolio.recipeapi.auth.security.jwt.filters;
 
-import cl.tica.portfolio.recipeapi.auth.secutiry.SimpleGrantedAuthorityJsonCreator;
+import cl.tica.portfolio.recipeapi.auth.security.SimpleGrantedAuthorityJsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -22,10 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cl.tica.portfolio.recipeapi.auth.secutiry.TokenJwtConfig.CONTENT_TYPE_JSON;
-import static cl.tica.portfolio.recipeapi.auth.secutiry.TokenJwtConfig.HEADER_AUTHORIZATION;
-import static cl.tica.portfolio.recipeapi.auth.secutiry.TokenJwtConfig.SECRET_KEY;
-import static cl.tica.portfolio.recipeapi.auth.secutiry.TokenJwtConfig.TOKEN_PREFIX;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.CONTENT_TYPE_JSON;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.HEADER_AUTHORIZATION;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.SECRET_KEY;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.TOKEN_PREFIX;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 

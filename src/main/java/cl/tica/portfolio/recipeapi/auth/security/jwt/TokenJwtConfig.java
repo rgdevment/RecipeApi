@@ -1,4 +1,4 @@
-package cl.tica.portfolio.recipeapi.auth.secutiry;
+package cl.tica.portfolio.recipeapi.auth.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 
