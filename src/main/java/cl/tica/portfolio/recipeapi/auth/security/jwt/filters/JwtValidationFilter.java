@@ -22,10 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.CONTENT_TYPE_JSON;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.HEADER_AUTHORIZATION;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.SECRET_KEY;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.filters.TokenJwtConfig.TOKEN_PREFIX;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.CONTENT_TYPE_JSON;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.HEADER_AUTHORIZATION;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.SECRET_KEY;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.TOKEN_PREFIX;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
