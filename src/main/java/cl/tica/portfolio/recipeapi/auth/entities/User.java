@@ -20,14 +20,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "users", indexes = {
         @Index(name = "idx_username", columnList = "username"),
@@ -50,7 +47,7 @@ public class User {
     private String email;
 
     @NotEmpty
-    @Size(max = 120)
+    @Size(max = 72)
     @Column(nullable = false)
     private String password;
 
@@ -61,10 +58,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}
     )
-    private List<UserRole> roles;
+    private final List<Role> roles = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserInformation userInformation;
+    private UserData userData;
 
     @NotNull
     @Column(nullable = false)
@@ -72,13 +69,21 @@ public class User {
 
     @NotNull
     @Column(nullable = false)
-    private boolean isEmailConfirmed = false; //verify email by link confirmation
+    private boolean isEmailVerified = false; //verify email by link confirmation
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
+
+    public User() {}
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -89,5 +94,64 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public boolean isAccountEnabled() {
+        return isAccountEnabled;
+    }
+
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
+    }
+
+    public void setAccountEnabled(boolean accountEnabled) {
+        isAccountEnabled = accountEnabled;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "{id=%d, username='%s', email='%s', roles=%s, userData=%s, createdAt=%s, updatedAt=%s}",
+                getId(), getUsername(), getEmail(), getRoles(), getUserData(), createdAt, updatedAt);
     }
 }

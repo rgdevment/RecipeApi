@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.services;
 
-import cl.tica.portfolio.recipeapi.auth.entities.UserRole;
+import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.UserRepository;
@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,19 +36,13 @@ public class UserServiceJpa implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return this.userRepository.findByEmail(email);
-    }
-
-    @Override
     @Transactional()
     public User save(User user) {
-        Optional<UserRole> optionalRole = roleRepository.findByName("ROLE_USER");
+        Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
 
         if (optionalRole.isPresent()) {
-            UserRole role = optionalRole.get();
-            user.setRoles(Collections.singletonList(role));
+            Role role = optionalRole.get();
+            user.addRole(role);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,9 +50,12 @@ public class UserServiceJpa implements UserService {
     }
 
     @Override
-    @Transactional()
-    public void deleteByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        userOptional.ifPresent(userRepository::delete);
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
