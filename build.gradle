@@ -37,11 +37,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+test {
+    jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+}
 checkstyle {
     toolVersion = '10.15.0'
 }
 
-tasks.named('test') {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
