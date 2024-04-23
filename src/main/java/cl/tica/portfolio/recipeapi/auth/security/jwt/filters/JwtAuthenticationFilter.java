@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 import static cl.tica.portfolio.recipeapi.auth.security.jwt.JwtTokenConfig.SECRET_KEY;
 
@@ -49,22 +48,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             Collection<GrantedAuthority> authorities = getAuthorities(claims);
 
-            if (isTokenExpired(claims)) {
-                filterChain.doFilter(request, response);
-            }
-
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             throw new AuthenticationCredentialsNotFoundException(e.getMessage());
         }
-    }
-
-    public boolean isTokenExpired(Claims claims) {
-        Date expirationDate = claims.getExpiration();
-        Date currentDate = new Date();
-        return expirationDate.before(currentDate);
     }
 
     public Collection<GrantedAuthority> getAuthorities(Claims claims) throws IOException {
