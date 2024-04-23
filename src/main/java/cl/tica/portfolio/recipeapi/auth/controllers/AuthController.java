@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
@@ -59,27 +57,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
-            Authentication authentication = authenticateUser(loginRequest);
-            String token = generateToken(authentication);
-            return buildTokenResponseEntity(token);
+            UsernamePasswordAuthenticationToken authenticationToken
+                    = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = jwtUtils.generateToken(authentication);
+            return ResponseEntity.ok(new TokenResponse(token));
         } catch (Exception e) {
             throw new InvalidCredentialsException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
-    }
-
-    private Authentication authenticateUser(LoginRequest loginRequest) {
-        UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
-    }
-
-    private String generateToken(Authentication authentication) throws IOException {
-        return jwtUtils.generateToken(authentication);
-    }
-
-    private ResponseEntity<TokenResponse> buildTokenResponseEntity(String token) {
-        return ResponseEntity.ok(new TokenResponse(token));
     }
 }
