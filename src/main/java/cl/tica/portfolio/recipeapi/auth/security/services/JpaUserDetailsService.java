@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class UserDetailsJpaService implements UserDetailsService {
+public class JpaUserDetailsService implements UserDetailsService {
 
     private final UserRepository repository;
 
-    public UserDetailsJpaService(UserRepository userRepository) {
+    public JpaUserDetailsService(UserRepository userRepository) {
         this.repository = userRepository;
     }
 

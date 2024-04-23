@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt.filters;
 
+import cl.tica.portfolio.recipeapi.auth.security.SimpleGrantedAuthorityJsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -7,98 +8,61 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.CONTENT_TYPE_JSON;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.EXPIRATION_TIME;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.HEADER_AUTHORIZATION;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.SECRET_KEY;
-import static cl.tica.portfolio.recipeapi.auth.security.jwt.TokenJwtConfig.TOKEN_PREFIX;
+import static cl.tica.portfolio.recipeapi.auth.security.jwt.JwtTokenConfig.SECRET_KEY;
 
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    private final AuthenticationManager authenticationManager;
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
 
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws AuthenticationException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+        String header = request.getHeader(HEADER_AUTHORIZATION);
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = header.replace(TOKEN_PREFIX, "");
+
         try {
-            cl.tica.portfolio.recipeapi.auth.entities.User user = new ObjectMapper().readValue(
-                    request.getInputStream(),
-                    cl.tica.portfolio.recipeapi.auth.entities.User.class);
-            String username = user.getUsername();
-            String password = user.getPassword();
+            Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(username, password);
+            String username = claims.getSubject();
+            Collection<GrantedAuthority> authorities = getAuthorities(claims);
 
-            return this.authenticationManager.authenticate(authenticationToken);
-        } catch (IOException e) {
-            throw new AuthenticationServiceException(e.getMessage());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            throw new AuthenticationCredentialsNotFoundException(e.getMessage());
         }
     }
 
-    @Override
-    protected void successfulAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain,
-            Authentication authResult
-    ) throws IOException, ServletException {
-        User user = (User) authResult.getPrincipal();
-        String username = user.getUsername();
-        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
-        Claims claims = Jwts.claims().add("authorities", new ObjectMapper().writeValueAsString(roles)).build();
+    public Collection<GrantedAuthority> getAuthorities(Claims claims) throws IOException {
+        Object authoritiesClaims = claims.get("authorities");
 
-        String token = Jwts.builder()
-                .subject(username)
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .claims(claims)
-                .signWith(SECRET_KEY)
-                .compact();
-
-        response.addHeader(HEADER_AUTHORIZATION, TOKEN_PREFIX + token);
-
-        Map<String, String> body = new HashMap<>();
-        body.put("token", token);
-
-        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-        response.setContentType(CONTENT_TYPE_JSON);
-        response.setStatus(HttpServletResponse.SC_OK);
+        return Arrays.asList(
+                new ObjectMapper()
+                        .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                        .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
     }
 
-    @Override
-    protected void unsuccessfulAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException failed
-    ) throws IOException, ServletException {
-        Map<String, String> body = new HashMap<>();
-        body.put("error", failed.getMessage());
-        body.put("error_description", failed.getLocalizedMessage());
-
-        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-        response.setContentType(CONTENT_TYPE_JSON);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
 }
