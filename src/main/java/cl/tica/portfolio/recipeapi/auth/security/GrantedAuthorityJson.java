@@ -3,8 +3,8 @@ package cl.tica.portfolio.recipeapi.auth.security;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class SimpleGrantedAuthorityJsonCreator {
+public abstract class GrantedAuthorityJson {
     @JsonCreator
-    SimpleGrantedAuthorityJsonCreator(@JsonProperty("authority") String role) {
+    GrantedAuthorityJson(@JsonProperty("authority") String role) {
     }
 }
