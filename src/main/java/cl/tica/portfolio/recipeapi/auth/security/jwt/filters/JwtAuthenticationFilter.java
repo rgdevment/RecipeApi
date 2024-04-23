@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt.filters;
 
-import cl.tica.portfolio.recipeapi.auth.security.SimpleGrantedAuthorityJsonCreator;
+import cl.tica.portfolio.recipeapi.auth.security.GrantedAuthorityJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -61,8 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return Arrays.asList(
                 new ObjectMapper()
-                        .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                        .addMixIn(SimpleGrantedAuthority.class, GrantedAuthorityJson.class)
                         .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
     }
-
 }
