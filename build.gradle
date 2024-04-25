@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'checkstyle'
+    id 'jacoco'
 }
 
 group = 'cl.tica.portfolio'
@@ -35,11 +36,19 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'net.datafaker:datafaker:2.2.2'
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
     jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+    finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+    dependsOn test
+}
+
 checkstyle {
     toolVersion = '10.15.0'
 }
