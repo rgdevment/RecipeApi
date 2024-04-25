@@ -2,7 +2,6 @@ package cl.tica.portfolio.recipeapi.auth.services;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
-import cl.tica.portfolio.recipeapi.auth.entities.UserData;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.UserRepository;
 import net.datafaker.Faker;
@@ -18,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -97,7 +96,7 @@ class UserServiceJpaTest {
         assertFalse(result.isAccountEnabled());
         assertFalse(result.isEmailVerified());
         assertFalse(result.isAccountLocked());
-        assertEquals(null, result.getUserData());
+        assertNull(result.getUserData());
     }
 
     @Test

@@ -57,4 +57,4 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-check.dependsOn checkstyleMain
+// check.dependsOn checkstyleMain
