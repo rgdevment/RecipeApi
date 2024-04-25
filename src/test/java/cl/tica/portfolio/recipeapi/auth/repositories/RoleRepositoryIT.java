@@ -1,7 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.repositories;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
-import cl.tica.portfolio.recipeapi.auth.entities.User;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 class RoleRepositoryIT {
     @Autowired
-    RoleRepository repository;
+    private RoleRepository repository;
 
     @Test
     void findByName() {
