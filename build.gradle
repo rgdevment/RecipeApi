@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
     id 'checkstyle'
     id 'jacoco'
+    id "org.sonarqube" version "5.0.0.4638"
 }
 
 group = 'cl.tica.portfolio'
@@ -49,6 +50,7 @@ jacocoTestReport {
     dependsOn test
     reports {
         csv.required = true
+        xml.required = true
     }
 }
 
@@ -58,4 +60,13 @@ checkstyle {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "rgdevment_RecipeApi"
+        property "sonar.organization", "rgdevment"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.java.coveragePlugin", "jacoco"
+    }
 }
