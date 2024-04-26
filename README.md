@@ -1,3 +1,7 @@
+![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/continuous-integration.yml/badge.svg)
+![Coverage](.github/badges/jacoco.svg)
+
+
 # RecipeAPI
 
 REST API for registering recipes by country culture and preferences, with ratings and automatic ingredient calculation based on the number of people, including cooking times among others.
