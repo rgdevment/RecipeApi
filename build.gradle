@@ -57,5 +57,3 @@ checkstyle {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
-
-// check.dependsOn checkstyleMain
