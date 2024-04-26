@@ -1,4 +1,4 @@
-name: build and check recipe API
+name: Continuous Integration
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-deploy:
-    name: build recipe API
+    name: Continuous Integration RecipeAPI
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
