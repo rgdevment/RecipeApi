@@ -54,15 +54,14 @@ public class AuthController {
         }
 
         if (service.existsByEmail(request.email())) {
-            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "Email already exists");
+            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "the email is already registered");
         }
 
-        User userRecord = service.save(new User(request.username(), request.email(), request.password()));
+        User userSaved = service.save(new User(request.username(), request.email(), request.password()));
         return ResponseEntity.status(HttpStatus.CREATED).body(new RegisteredUserResponse(
-                userRecord.getId(),
-                userRecord.getUsername(),
-                userRecord.getEmail(),
-                userRecord.getRoles()
+                userSaved.getUsername(),
+                userSaved.getEmail(),
+                userSaved.getRoles()
         ));
     }
 
