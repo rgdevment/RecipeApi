@@ -9,6 +9,12 @@ import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.UserService;
+import cl.tica.portfolio.recipeapi.models.ExceptionWrappingError;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Auth Controller")
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
@@ -35,6 +42,11 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
+
+    @Operation(summary = "Register a new user")
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisteredUserResponse.class)))
+    @ApiResponse(responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
+    @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
     @PostMapping("/register")
     public ResponseEntity<RegisteredUserResponse> registerUser(@Valid @RequestBody SignupRequest request) {
         if (service.existsByUsername(request.username())) {
@@ -46,7 +58,7 @@ public class AuthController {
         }
 
         User userRecord = service.save(new User(request.username(), request.email(), request.password()));
-        return ResponseEntity.ok(new RegisteredUserResponse(
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RegisteredUserResponse(
                 userRecord.getId(),
                 userRecord.getUsername(),
                 userRecord.getEmail(),
@@ -54,6 +66,9 @@ public class AuthController {
         ));
     }
 
+    @Operation(summary = "Get token for registered user")
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidCredentialsException.class)))
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
