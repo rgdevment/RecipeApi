@@ -43,11 +43,13 @@ dependencies {
 
 test {
     jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
-    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
     dependsOn test
+    reports {
+        csv.required = true
+    }
 }
 
 checkstyle {
@@ -57,5 +59,3 @@ checkstyle {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
-
-// check.dependsOn checkstyleMain
