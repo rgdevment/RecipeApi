@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt;
 
-import cl.tica.portfolio.recipeapi.auth.dto.AuthFieldsValidationError;
+import cl.tica.portfolio.recipeapi.auth.dto.ValidationFieldsError;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.exceptions.ApiException;
@@ -43,9 +43,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionWrappingError> handleValidationAuthException(MethodArgumentNotValidException exception) {
-        List<AuthFieldsValidationError> errors = exception.getFieldErrors().stream()
+        List<ValidationFieldsError> errors = exception.getFieldErrors().stream()
                 .map(fieldError ->
-                        new AuthFieldsValidationError(fieldError.getField(), fieldError.getCode(), fieldError.getDefaultMessage())
+                        new ValidationFieldsError(fieldError.getField(), fieldError.getCode(), fieldError.getDefaultMessage())
                 )
                 .toList();
 

@@ -3,36 +3,39 @@ package cl.tica.portfolio.recipeapi.auth.services;
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
-import cl.tica.portfolio.recipeapi.auth.repositories.UserRepository;
+import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceJpa implements UserService {
-    private final UserRepository userRepository;
+public class AuthServiceJpa implements AuthService {
+    private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public UserServiceJpa(UserRepository repository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
-        this.userRepository = repository;
+    public AuthServiceJpa(AuthRepository repository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+        this.authRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Optional<User> findByUsername(String username) {
+        return this.authRepository.findByUsername(username);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
-        return this.userRepository.findByUsername(username);
+    public boolean existsByUsername(String username) {
+        return authRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return authRepository.existsByEmail(email);
     }
 
     @Override
@@ -46,16 +49,6 @@ public class UserServiceJpa implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return authRepository.save(user);
     }
 }

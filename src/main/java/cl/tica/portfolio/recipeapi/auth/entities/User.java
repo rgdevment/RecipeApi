@@ -101,10 +101,6 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -133,11 +129,6 @@ public class User {
         this.password = password;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles.clear();
-        this.roles.addAll(roles);
-    }
-
     public void addRole(Role role) {
         this.roles.add(role);
     }
@@ -150,26 +141,11 @@ public class User {
         return emailVerified;
     }
 
-    public void setAccountEnabled(boolean accountEnabled) {
-        this.accountEnabled = accountEnabled;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setAccountLocked(boolean accountLocked) {
-        this.accountLocked = accountLocked;
-    }
-
-    public void setEmailVerified(boolean emailVerified) {
-        this.emailVerified = emailVerified;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "{username='%s', email='%s', roles=%s, user_data=%s, account_enabled=%s, email_confirmed=%s, created_at=%s, updated_at=%s}",
-                getUsername(), getEmail(), getRoles(), getUserData(), isAccountEnabled(), isEmailVerified(), createdAt, updatedAt);
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

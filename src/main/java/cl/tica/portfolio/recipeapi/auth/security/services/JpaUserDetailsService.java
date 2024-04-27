@@ -2,7 +2,7 @@ package cl.tica.portfolio.recipeapi.auth.security.services;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
-import cl.tica.portfolio.recipeapi.auth.repositories.UserRepository;
+import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 public class JpaUserDetailsService implements UserDetailsService {
 
-    private final UserRepository repository;
+    private final AuthRepository repository;
 
-    public JpaUserDetailsService(UserRepository userRepository) {
-        this.repository = userRepository;
+    public JpaUserDetailsService(AuthRepository repository) {
+        this.repository = repository;
     }
 
     @Transactional(readOnly = true)

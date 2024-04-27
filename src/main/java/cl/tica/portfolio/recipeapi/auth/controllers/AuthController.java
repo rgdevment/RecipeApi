@@ -8,7 +8,7 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
-import cl.tica.portfolio.recipeapi.auth.services.UserService;
+import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import cl.tica.portfolio.recipeapi.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,17 +31,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
-    private final UserService service;
+    private final AuthService service;
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    public AuthController(UserService service, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthController(AuthService service, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.service = service;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
     }
-
 
     @Operation(summary = "Register a new user")
     @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisteredUserResponse.class)))

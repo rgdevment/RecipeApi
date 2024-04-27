@@ -4,7 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
-import cl.tica.portfolio.recipeapi.auth.services.UserService;
+import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +39,7 @@ class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService service;
+    private AuthService service;
 
     @MockBean
     private AuthenticationManager authenticationManager;
