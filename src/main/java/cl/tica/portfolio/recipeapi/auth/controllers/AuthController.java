@@ -49,11 +49,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisteredUserResponse> registerUser(@Valid @RequestBody SignupRequest request) {
         if (service.existsByUsername(request.username())) {
-            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "Username is already taken!");
+            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "Username is already taken!.");
         }
 
         if (service.existsByEmail(request.email())) {
-            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "the email is already registered");
+            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "the email is already registered.");
         }
 
         User userSaved = service.save(new User(request.username(), request.email(), request.password()));
@@ -78,7 +78,8 @@ public class AuthController {
             String token = jwtUtils.generateToken(authentication);
             return ResponseEntity.ok(new TokenResponse(token));
         } catch (Exception e) {
-            throw new InvalidCredentialsException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
+            throw new InvalidCredentialsException(HttpStatus.UNAUTHORIZED,
+                    "Credentials do not match or the user is not activated.");
         }
     }
 }

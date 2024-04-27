@@ -60,12 +60,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         return ResponseEntity.status(exception.getStatusCode()).body(error);
     }
 
+    //Verificar por que este handler exception no funciona-
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<ExceptionWrappingError> handleAuthenticationTokenException(AuthenticationCredentialsNotFoundException exception) {
         ExceptionWrappingError error = new ExceptionWrappingError(
                 new Date(System.currentTimeMillis()),
                 exception.getClass().getSimpleName(),
-                "Invalid or expired token",
+                "Invalid or expired token.",
                 HttpServletResponse.SC_UNAUTHORIZED,
                 new ArrayList<>()
         );
