@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-class UserRepositoryIT {
+class AuthRepositoryIT {
     @Autowired
-    private UserRepository repository;
+    private AuthRepository repository;
 
     @Test
     void findByUsername() {

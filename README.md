@@ -1,5 +1,4 @@
 ![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/continuous-integration.yml/badge.svg)
-![Coverage](.github/badges/jacoco.svg)
 
 
 # RecipeAPI

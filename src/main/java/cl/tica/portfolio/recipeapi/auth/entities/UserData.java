@@ -32,48 +32,4 @@ public class UserData {
 
     @Column
     private GenderType gender;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public GenderType getGender() {
-        return gender;
-    }
-
-    public void setGender(GenderType gender) {
-        this.gender = gender;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "{name='%s', lastname='%s', gender=%s}",
-                getName(), getLastname(), getGender()
-        );
-    }
 }

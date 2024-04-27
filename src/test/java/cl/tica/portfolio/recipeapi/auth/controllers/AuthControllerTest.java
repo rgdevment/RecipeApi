@@ -4,7 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
-import cl.tica.portfolio.recipeapi.auth.services.UserService;
+import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +39,7 @@ class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService service;
+    private AuthService service;
 
     @MockBean
     private AuthenticationManager authenticationManager;
@@ -94,7 +94,7 @@ class AuthControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("Username is already taken!"));
+                .andExpect(jsonPath("$.message").value("Username is already taken!."));
 
         verify(service, times(1)).existsByUsername(request.username());
         verify(service, never()).existsByEmail(anyString());
@@ -116,7 +116,7 @@ class AuthControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("the email is already registered"));
+                .andExpect(jsonPath("$.message").value("the email is already registered."));
 
         verify(service, times(1)).existsByUsername(request.username());
         verify(service, times(1)).existsByEmail(request.email());
@@ -158,7 +158,7 @@ class AuthControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.title").value("InvalidCredentialsException"))
-                .andExpect(jsonPath("$.message").value("Invalid username or password"));
+                .andExpect(jsonPath("$.message").value("Credentials do not match or the user is not activated."));
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, never()).generateToken(any(Authentication.class));
