@@ -42,7 +42,7 @@ class AuthServiceJpaTest {
         String username = faker.internet().username();
         String email = faker.internet().emailAddress();
         String password = faker.internet().password();
-        when(authRepository.findByUsername(username)).thenReturn(
+        when(authRepository.findByUsernameIgnoreCase(username)).thenReturn(
                 Optional.of(new User(username, email, password))
         );
 

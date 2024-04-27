@@ -21,7 +21,7 @@ class AuthRepositoryIT {
 
     @Test
     void findByUsername() {
-        Optional<User> optionalUser = repository.findByUsername("admin");
+        Optional<User> optionalUser = repository.findByUsernameIgnoreCase("admin");
         assertTrue(optionalUser.isPresent());
         assertEquals("admin", optionalUser.get().getUsername());
     }
@@ -29,7 +29,7 @@ class AuthRepositoryIT {
     @Test
     void findByUsernameThrowsException() {
         Faker faker = new Faker();
-        Optional<User> optionalUser = repository.findByUsername(faker.internet().username());
+        Optional<User> optionalUser = repository.findByUsernameIgnoreCase(faker.internet().username());
         assertThrows(NoSuchElementException.class, optionalUser::get);
         assertFalse(optionalUser.isPresent());
     }

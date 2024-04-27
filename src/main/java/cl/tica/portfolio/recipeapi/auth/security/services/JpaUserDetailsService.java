@@ -25,7 +25,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByUsername(username).orElseThrow(() ->
+        User user = repository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User %s not found", username)));
 
         List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()

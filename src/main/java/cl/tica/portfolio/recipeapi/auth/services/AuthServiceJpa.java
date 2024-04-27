@@ -25,7 +25,7 @@ public class AuthServiceJpa implements AuthService {
     @Override
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
-        return this.authRepository.findByUsername(username);
+        return this.authRepository.findByUsernameIgnoreCase(username);
     }
 
     @Override
