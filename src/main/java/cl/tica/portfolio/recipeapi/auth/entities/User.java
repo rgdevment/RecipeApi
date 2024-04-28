@@ -15,6 +15,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -65,19 +67,21 @@ public class User {
 
     @NotNull
     @Column(nullable = false)
-    private boolean accountEnabled = false; //unlock with email verification
+    private boolean accountEnabled;
 
     @NotNull
     @Column(nullable = false)
-    private boolean accountLocked = false;
+    private boolean accountLocked;
 
     @NotNull
     @Column(nullable = false)
-    private boolean emailVerified = false; //verify email by link confirmation
+    private boolean emailVerified;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
@@ -94,11 +98,19 @@ public class User {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        setAccountEnabled(false);
+        setEmailVerified(false);
+        setAccountLocked(false);
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -125,14 +137,6 @@ public class User {
         return accountEnabled;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
     public boolean isAccountLocked() {
         return accountLocked;
     }
@@ -147,5 +151,29 @@ public class User {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public void setAccountEnabled(boolean accountEnabled) {
+        this.accountEnabled = accountEnabled;
+    }
+
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
     }
 }

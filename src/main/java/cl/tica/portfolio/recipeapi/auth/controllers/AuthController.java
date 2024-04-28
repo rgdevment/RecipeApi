@@ -4,7 +4,9 @@ import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.response.RegisteredUserResponse;
 import cl.tica.portfolio.recipeapi.auth.dto.response.TokenResponse;
+import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthService;
@@ -21,6 +23,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +45,7 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-    @Operation(summary = "Register a new user")
+    @Operation(summary = "Register a new user.")
     @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisteredUserResponse.class)))
     @ApiResponse(responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
@@ -55,7 +59,7 @@ public class AuthController {
         ));
     }
 
-    @Operation(summary = "Get token for registered user")
+    @Operation(summary = "Get token for registered user.")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidCredentialsException.class)))
     @PostMapping("/login")
@@ -72,5 +76,18 @@ public class AuthController {
             throw new InvalidCredentialsException(HttpStatus.UNAUTHORIZED,
                     "Credentials do not match or the user is not activated.");
         }
+    }
+
+    @Operation(summary = "Confirm by token, user and email.")
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
+    @GetMapping("/confirm-account/{code}")
+    public ResponseEntity<UserConfirmationResponse> confirmUserAccount(@PathVariable String code) {
+        boolean isSuccess = service.confirmEmail(code);
+        if (isSuccess) {
+            UserConfirmationResponse response = new UserConfirmationResponse("User and email verify successfully");
+            return ResponseEntity.ok(response);
+        }
+        throw new InvalidConfirmationException(HttpStatus.UNAUTHORIZED, "Validation was not possible, the token or user is not valid.");
     }
 }

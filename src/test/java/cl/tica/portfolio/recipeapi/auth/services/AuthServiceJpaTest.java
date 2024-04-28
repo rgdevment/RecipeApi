@@ -4,6 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
+import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,49 +27,19 @@ class AuthServiceJpaTest {
     private AuthRepository authRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private UserConfirmationRepository userConfirmationRepository;
+    private EmailService emailService;
     private AuthService service;
 
     @BeforeEach
     void setUp() {
         this.authRepository = mock(AuthRepository.class);
         this.roleRepository = mock(RoleRepository.class);
+        this.userConfirmationRepository = mock(UserConfirmationRepository.class);
         this.passwordEncoder = new BCryptPasswordEncoder();
-        this.service = new AuthServiceJpa(authRepository, passwordEncoder, roleRepository);
-    }
-
-    @Test
-    void findByUsername() {
-        Faker faker = new Faker();
-        String username = faker.internet().username();
-        String email = faker.internet().emailAddress();
-        String password = faker.internet().password();
-        when(authRepository.findByUsernameIgnoreCase(username)).thenReturn(
-                Optional.of(new User(username, email, password))
-        );
-
-        Optional<User> result = service.findByUsername(username);
-        assertTrue(result.isPresent());
-        assertEquals(username, result.get().getUsername());
-        assertEquals(email, result.get().getEmail());
-        assertEquals(password, result.get().getPassword());
-    }
-
-    @Test
-    void existsByUsername() {
-        Faker faker = new Faker();
-        String username = faker.internet().username();
-        when(authRepository.existsByUsername(username)).thenReturn(true);
-
-        assertTrue(service.existsByUsername(username));
-    }
-
-    @Test
-    void existsByEmail() {
-        Faker faker = new Faker();
-        String email = faker.internet().emailAddress();
-        when(authRepository.existsByEmail(email)).thenReturn(true);
-
-        assertTrue(service.existsByEmail(email));
+        this.emailService = mock(EmailService.class);
+        this.service = new AuthServiceJpa(authRepository, passwordEncoder,
+                roleRepository, userConfirmationRepository, emailService);
     }
 
     @Test

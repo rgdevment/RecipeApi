@@ -1,6 +1,7 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt;
 
 import cl.tica.portfolio.recipeapi.auth.dto.ValidationFieldsError;
+import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.exceptions.ApiException;
@@ -28,7 +29,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 
-    @ExceptionHandler({UserAlreadyExistException.class, InvalidCredentialsException.class})
+    @ExceptionHandler({
+            UserAlreadyExistException.class,
+            InvalidCredentialsException.class,
+            InvalidConfirmationException.class
+    })
     public ResponseEntity<ExceptionWrappingError> handleInvalidLoginException(ApiException exception) {
         ExceptionWrappingError error = new ExceptionWrappingError(
                 new Date(System.currentTimeMillis()),

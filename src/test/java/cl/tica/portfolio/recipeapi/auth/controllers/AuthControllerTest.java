@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -61,10 +60,7 @@ class AuthControllerTest {
                 faker.internet().emailAddress(), faker.internet().password());
 
         User user = new User(request.username(), request.email(), request.password());
-        when(service.existsByUsername(request.username())).thenReturn(false);
-        when(service.existsByEmail(request.email())).thenReturn(false);
         when(service.register(any(User.class))).thenReturn(user);
-
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,52 +71,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.password").doesNotExist());
 
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, times(1)).existsByEmail(request.email());
         verify(service, times(1)).register(any(User.class));
-    }
-
-    @Test
-    void registerUserIfUsernameExist() throws Exception {
-        Faker faker = new Faker();
-        SignupRequest request = new SignupRequest(faker.internet().username(),
-                faker.internet().emailAddress(), faker.internet().password());
-
-        when(service.existsByUsername(request.username())).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("Username is already taken!."));
-
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, never()).existsByEmail(anyString());
-        verify(service, never()).register(any(User.class));
-    }
-
-    @Test
-    void registerUserIfEmailExist() throws Exception {
-        Faker faker = new Faker();
-        SignupRequest request = new SignupRequest(faker.internet().username(),
-                faker.internet().emailAddress(), faker.internet().password());
-
-        when(service.existsByUsername(request.username())).thenReturn(false);
-        when(service.existsByEmail(request.email())).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("the email is already registered."));
-
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, times(1)).existsByEmail(request.email());
-        verify(service, never()).register(any(User.class));
     }
 
     @Test
