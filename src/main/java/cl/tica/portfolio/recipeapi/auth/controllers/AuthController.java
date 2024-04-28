@@ -78,14 +78,14 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Confirm by token, user and email.")
+    @Operation(summary = "Confirm user and email.")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
     @GetMapping("/confirm-account/{code}")
     public ResponseEntity<UserConfirmationResponse> confirmUserAccount(@PathVariable String code) {
         boolean isSuccess = service.confirmEmail(code);
         if (isSuccess) {
-            UserConfirmationResponse response = new UserConfirmationResponse("User and email verify successfully");
+            UserConfirmationResponse response = new UserConfirmationResponse("User and email verify successfully.");
             return ResponseEntity.ok(response);
         }
         throw new InvalidConfirmationException(HttpStatus.UNAUTHORIZED, "Validation was not possible, the token or user is not valid.");

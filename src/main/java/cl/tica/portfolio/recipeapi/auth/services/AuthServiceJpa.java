@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cl.tica.portfolio.recipeapi.auth.entities.Role.DEFAULT_ROLE;
 
@@ -38,9 +39,7 @@ public class AuthServiceJpa implements AuthService {
         assignDefaultRole(user);
         encryptPassword(user);
         User savedUser = saveUser(user);
-
-        UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
-        userConfirmationRepository.save(userVerificationToken);
+        generateVerificationCode(savedUser);
 
         return savedUser;
     }
@@ -48,20 +47,18 @@ public class AuthServiceJpa implements AuthService {
     @Override
     @Transactional()
     public boolean confirmEmail(String code) {
-        UserVerificationToken token = userConfirmationRepository.findUserConfirmationByCode(code);
-        if (token == null) {
-            return false;
-        }
+        AtomicBoolean isConfirmed = new AtomicBoolean(false);
 
-        Optional<User> userOptional = authRepository.findByUsernameIgnoreCase(token.getUser().getUsername());
-        if (userOptional.isEmpty()) {
-            return false;
-        }
+        userConfirmationRepository.findUserConfirmationByCode(code)
+                .ifPresent(token ->
+                        authRepository.findByUsernameIgnoreCase(token.getUser().getUsername())
+                                .ifPresent(user -> {
+                                    activateUser(user);
+                                    userConfirmationRepository.delete(token);
+                                    isConfirmed.set(true);
+                                }));
 
-        activateUser(userOptional.get());
-        userConfirmationRepository.delete(token);
-
-        return true;
+        return isConfirmed.get();
     }
 
     private void validateNewUser(User user) {
@@ -80,6 +77,11 @@ public class AuthServiceJpa implements AuthService {
 
     private void encryptPassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    private void generateVerificationCode(User savedUser) {
+        UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
+        userConfirmationRepository.save(userVerificationToken);
     }
 
     private void activateUser(User user) {

@@ -114,4 +114,33 @@ class AuthControllerTest {
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, never()).generateToken(any(Authentication.class));
     }
+
+    @Test
+    void confirmUserAccount() throws Exception {
+        Faker faker = new Faker();
+        String code = faker.internet().uuid();
+        when(service.confirmEmail(code)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("User and email verify successfully."));
+
+        verify(service, times(1)).confirmEmail(code);
+    }
+
+    @Test
+    void confirmUserAccountInvalidToken() throws Exception {
+        Faker faker = new Faker();
+        String code = faker.internet().uuid();
+        when(service.confirmEmail(code)).thenReturn(false);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.title").value("InvalidConfirmationException"))
+                .andExpect(jsonPath("$.message").value("Validation was not possible, the token or user is not valid."));
+
+        verify(service, times(1)).confirmEmail(code);
+    }
 }

@@ -4,7 +4,9 @@ import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository()
 public interface UserConfirmationRepository extends JpaRepository<UserVerificationToken, Long> {
-    UserVerificationToken findUserConfirmationByCode(String code);
+    Optional<UserVerificationToken> findUserConfirmationByCode(String code);
 }
