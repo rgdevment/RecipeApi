@@ -8,7 +8,6 @@ import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +22,13 @@ public class AuthServiceJpa implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserConfirmationRepository userConfirmationRepository;
-    private final EmailService emailService;
 
     public AuthServiceJpa(AuthRepository repository, PasswordEncoder passwordEncoder, RoleRepository roleRepository,
-                          UserConfirmationRepository userConfirmationRepository, EmailService emailService) {
+                          UserConfirmationRepository userConfirmationRepository) {
         this.authRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userConfirmationRepository = userConfirmationRepository;
-        this.emailService = emailService;
     }
 
     @Override
@@ -44,8 +41,6 @@ public class AuthServiceJpa implements AuthService {
 
         UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
         userConfirmationRepository.save(userVerificationToken);
-
-        sendVerificationMail(user, userVerificationToken);
 
         return savedUser;
     }
@@ -95,14 +90,5 @@ public class AuthServiceJpa implements AuthService {
 
     private User saveUser(User user) {
         return authRepository.save(user);
-    }
-
-    private void sendVerificationMail(User user, UserVerificationToken userVerificationToken) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getUsername());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setText("To confirm your account, please click here : "
-                + "http://localhost:8085/confirm-account?token=" + userVerificationToken.getCode());
-        emailService.sendEmail(mailMessage);
     }
 }

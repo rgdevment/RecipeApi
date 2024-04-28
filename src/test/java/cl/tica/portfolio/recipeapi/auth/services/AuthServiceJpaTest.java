@@ -28,7 +28,6 @@ class AuthServiceJpaTest {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private UserConfirmationRepository userConfirmationRepository;
-    private EmailService emailService;
     private AuthService service;
 
     @BeforeEach
@@ -37,9 +36,8 @@ class AuthServiceJpaTest {
         this.roleRepository = mock(RoleRepository.class);
         this.userConfirmationRepository = mock(UserConfirmationRepository.class);
         this.passwordEncoder = new BCryptPasswordEncoder();
-        this.emailService = mock(EmailService.class);
         this.service = new AuthServiceJpa(authRepository, passwordEncoder,
-                roleRepository, userConfirmationRepository, emailService);
+                roleRepository, userConfirmationRepository);
     }
 
     @Test
