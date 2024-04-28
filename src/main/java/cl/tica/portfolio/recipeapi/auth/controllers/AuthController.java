@@ -6,7 +6,6 @@ import cl.tica.portfolio.recipeapi.auth.dto.response.RegisteredUserResponse;
 import cl.tica.portfolio.recipeapi.auth.dto.response.TokenResponse;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
-import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import cl.tica.portfolio.recipeapi.models.ExceptionWrappingError;
@@ -48,19 +47,11 @@ public class AuthController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
     @PostMapping("/register")
     public ResponseEntity<RegisteredUserResponse> registerUser(@Valid @RequestBody SignupRequest request) {
-        if (service.existsByUsername(request.username())) {
-            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "Username is already taken!.");
-        }
-
-        if (service.existsByEmail(request.email())) {
-            throw new UserAlreadyExistException(HttpStatus.CONFLICT, "the email is already registered.");
-        }
-
-        User userSaved = service.save(new User(request.username(), request.email(), request.password()));
+        User user = service.register(new User(request.username(), request.email(), request.password()));
         return ResponseEntity.status(HttpStatus.CREATED).body(new RegisteredUserResponse(
-                userSaved.getUsername(),
-                userSaved.getEmail(),
-                userSaved.getRoles()
+                user.getUsername(),
+                user.getEmail(),
+                user.getRoles()
         ));
     }
 

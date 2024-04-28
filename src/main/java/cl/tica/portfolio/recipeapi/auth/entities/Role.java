@@ -10,6 +10,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role {
+    public static final String DEFAULT_ROLE = "ROLE_USER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -84,7 +84,7 @@ class AuthServiceJpaTest {
         when(roleRepository.findByName(roleUser)).thenReturn(Optional.of(new Role(roleUser)));
         when(authRepository.save(user)).thenReturn(user);
 
-        User result = service.save(user);
+        User result = service.register(user);
         assertEquals(user.getUsername(), result.getUsername());
         assertEquals(user.getEmail(), result.getEmail());
         assertNotEquals(password, result.getPassword());
@@ -110,7 +110,7 @@ class AuthServiceJpaTest {
         when(roleRepository.findByName(role)).thenReturn(null);
         when(authRepository.save(user)).thenReturn(user);
 
-        User result = service.save(user);
+        User result = service.register(user);
         assertEquals(user.getUsername(), result.getUsername());
         assertEquals(user.getEmail(), result.getEmail());
         assertNotEquals(password, result.getPassword());

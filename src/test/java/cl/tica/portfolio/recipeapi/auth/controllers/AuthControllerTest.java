@@ -63,7 +63,7 @@ class AuthControllerTest {
         User user = new User(request.username(), request.email(), request.password());
         when(service.existsByUsername(request.username())).thenReturn(false);
         when(service.existsByEmail(request.email())).thenReturn(false);
-        when(service.save(any(User.class))).thenReturn(user);
+        when(service.register(any(User.class))).thenReturn(user);
 
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
@@ -77,7 +77,7 @@ class AuthControllerTest {
 
         verify(service, times(1)).existsByUsername(request.username());
         verify(service, times(1)).existsByEmail(request.email());
-        verify(service, times(1)).save(any(User.class));
+        verify(service, times(1)).register(any(User.class));
     }
 
     @Test
@@ -98,7 +98,7 @@ class AuthControllerTest {
 
         verify(service, times(1)).existsByUsername(request.username());
         verify(service, never()).existsByEmail(anyString());
-        verify(service, never()).save(any(User.class));
+        verify(service, never()).register(any(User.class));
     }
 
     @Test
@@ -120,7 +120,7 @@ class AuthControllerTest {
 
         verify(service, times(1)).existsByUsername(request.username());
         verify(service, times(1)).existsByEmail(request.email());
-        verify(service, never()).save(any(User.class));
+        verify(service, never()).register(any(User.class));
     }
 
     @Test

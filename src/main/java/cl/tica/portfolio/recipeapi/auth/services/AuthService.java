@@ -11,5 +11,5 @@ public interface AuthService {
 
     boolean existsByEmail(String email);
 
-    User save(User user);
+    User register(User user);
 }
