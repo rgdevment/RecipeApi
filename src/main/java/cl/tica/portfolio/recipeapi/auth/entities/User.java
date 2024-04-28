@@ -71,10 +71,6 @@ public class User {
 
     @NotNull
     @Column(nullable = false)
-    private boolean accountLocked;
-
-    @NotNull
-    @Column(nullable = false)
     private boolean emailVerified;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -101,7 +97,6 @@ public class User {
 
         setAccountEnabled(false);
         setEmailVerified(false);
-        setAccountLocked(false);
     }
 
     @PreUpdate
@@ -137,10 +132,6 @@ public class User {
         return accountEnabled;
     }
 
-    public boolean isAccountLocked() {
-        return accountLocked;
-    }
-
     public boolean isEmailVerified() {
         return emailVerified;
     }
@@ -171,9 +162,5 @@ public class User {
 
     public void setAccountEnabled(boolean accountEnabled) {
         this.accountEnabled = accountEnabled;
-    }
-
-    public void setAccountLocked(boolean accountLocked) {
-        this.accountLocked = accountLocked;
     }
 }

@@ -37,7 +37,7 @@ public class JpaUserDetailsService implements UserDetailsService {
                 user.isAccountEnabled(),
                 true,
                 true,
-                !user.isAccountLocked(),
+                true,
                 grantedAuthorities
         );
     }

@@ -77,7 +77,6 @@ class AuthServiceJpaTest {
         assertEquals(user.getRoles().getFirst().getName(), result.getRoles().getFirst().getName());
         assertFalse(result.isAccountEnabled());
         assertFalse(result.isEmailVerified());
-        assertFalse(result.isAccountLocked());
         assertNull(result.getUserData());
 
         verify(roleRepository, times(1)).findByName(DEFAULT_ROLE);
@@ -197,7 +196,6 @@ class AuthServiceJpaTest {
         assertTrue(service.confirmEmail(code));
         assertTrue(user.isEmailVerified());
         assertTrue(user.isAccountEnabled());
-        assertFalse(user.isAccountLocked());
 
         verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(code);
         verify(authRepository, times(1)).findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername());
