@@ -3,16 +3,19 @@ package cl.tica.portfolio.recipeapi.auth.listeners;
 import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class SendVerificationEmailListenerTest {
     @InjectMocks
@@ -28,7 +31,6 @@ class SendVerificationEmailListenerTest {
         assertEquals(username, event.getUsername());
 
         sendVerificationEmailListener.handleSendVerificationEmailListener(event);
-
-        verify(LOGGER, times(1)).info("Sending verification email with username {}", event.getUsername());
+        verify(LOGGER, times(1)).info("Sending verification email with username {}.", event.getUsername());
     }
 }

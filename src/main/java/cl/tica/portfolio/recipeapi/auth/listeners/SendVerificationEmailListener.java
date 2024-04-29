@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SendVerificationEmailListener {
-    private final Logger logger = LoggerFactory.getLogger(SendVerificationEmailListener.class);
+    private Logger logger = LoggerFactory.getLogger(SendVerificationEmailListener.class);
 
     @Async
     @EventListener
     public void handleSendVerificationEmailListener(OnRegistrationCompleteEvent event) {
-        logger.info("Sending verification email with username {}", event.getUsername());
+        logger.info("Sending verification email with username {}.", event.getUsername());
     }
 }
