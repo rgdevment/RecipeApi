@@ -2,7 +2,9 @@ package cl.tica.portfolio.recipeapi.auth.services;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
+import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationTokenTestStub;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
@@ -12,17 +14,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static cl.tica.portfolio.recipeapi.auth.entities.Role.DEFAULT_ROLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,7 +63,7 @@ class AuthServiceJpaTest {
         String username = faker.internet().username();
         String email = faker.internet().emailAddress();
         String password = faker.internet().password();
-        User user = new User(username, email, password);
+        User user = UserTestStub.create(username, email, password);
 
         when(roleRepository.findByName(DEFAULT_ROLE)).thenReturn(Optional.of(new Role(DEFAULT_ROLE)));
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(false);
@@ -78,6 +80,9 @@ class AuthServiceJpaTest {
         assertFalse(result.isAccountEnabled());
         assertFalse(result.isEmailVerified());
         assertNull(result.getUserData());
+        assertInstanceOf(LocalDateTime.class, user.getCreatedAt());
+        assertInstanceOf(LocalDateTime.class, user.getUpdatedAt());
+        assertFalse(result.isEmailVerified());
 
         verify(roleRepository, times(1)).findByName(DEFAULT_ROLE);
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
@@ -92,7 +97,7 @@ class AuthServiceJpaTest {
         String username = faker.internet().username();
         String email = faker.internet().emailAddress();
         String password = faker.internet().password();
-        User user = new User(username, email, password);
+        User user = UserTestStub.create(username, email, password);
 
         when(roleRepository.findByName(DEFAULT_ROLE)).thenReturn(Optional.empty());
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(false);
@@ -114,12 +119,7 @@ class AuthServiceJpaTest {
 
     @Test
     void registerUsernameAlreadyExists() {
-        Faker faker = new Faker();
-
-        String username = faker.internet().username();
-        String email = faker.internet().emailAddress();
-        String password = faker.internet().password();
-        User user = new User(username, email, password);
+        User user = UserTestStub.random();
 
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(true);
 
@@ -137,12 +137,7 @@ class AuthServiceJpaTest {
 
     @Test
     void registerEmailAlreadyExists() {
-        Faker faker = new Faker();
-
-        String username = faker.internet().username();
-        String email = faker.internet().emailAddress();
-        String password = faker.internet().password();
-        User user = new User(username, email, password);
+        User user = UserTestStub.random();
 
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(false);
         when(authRepository.existsByEmail(user.getEmail())).thenReturn(true);
@@ -171,33 +166,28 @@ class AuthServiceJpaTest {
 
     @Test
     void confirmEmailTokenFoundUserNotPersistOrError() {
-        Faker faker = new Faker();
-        String code = faker.internet().uuid();
-        User user = new User(faker.internet().username(), faker.internet().emailAddress(), faker.internet().password());
-        UserVerificationToken userVerificationToken = new UserVerificationToken(user);
-        when(userConfirmationRepository.findUserConfirmationByCode(code)).thenReturn(Optional.of(userVerificationToken));
+        UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
+        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
         when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.empty());
 
-        assertFalse(service.confirmEmail(code));
+        assertFalse(service.confirmEmail(userVerificationToken.getCode()));
 
-        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(code);
+        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(userVerificationToken.getCode());
         verify(authRepository, times(1)).findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername());
     }
 
     @Test
     void confirmEmailSuccessfully() {
-        Faker faker = new Faker();
-        String code = faker.internet().uuid();
-        User user = new User(faker.internet().username(), faker.internet().emailAddress(), faker.internet().password());
-        UserVerificationToken userVerificationToken = new UserVerificationToken(user);
-        when(userConfirmationRepository.findUserConfirmationByCode(code)).thenReturn(Optional.of(userVerificationToken));
-        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.of(user));
+        UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
+        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
+        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.of(userVerificationToken.getUser()));
 
-        assertTrue(service.confirmEmail(code));
-        assertTrue(user.isEmailVerified());
-        assertTrue(user.isAccountEnabled());
+        assertTrue(service.confirmEmail(userVerificationToken.getCode()));
+        assertTrue(userVerificationToken.getUser().isEmailVerified());
+        assertTrue(userVerificationToken.getUser().isAccountEnabled());
+        assertInstanceOf(LocalDateTime.class, userVerificationToken.getUser().getCreatedAt());
 
-        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(code);
+        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(userVerificationToken.getCode());
         verify(authRepository, times(1)).findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername());
     }
 }

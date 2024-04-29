@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt;
 
-import cl.tica.portfolio.recipeapi.auth.dto.ValidationFieldsError;
+import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;

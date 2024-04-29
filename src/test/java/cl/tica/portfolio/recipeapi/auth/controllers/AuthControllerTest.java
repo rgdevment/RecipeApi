@@ -3,6 +3,7 @@ package cl.tica.portfolio.recipeapi.auth.controllers;
 import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +60,7 @@ class AuthControllerTest {
         SignupRequest request = new SignupRequest(faker.internet().username(),
                 faker.internet().emailAddress(), faker.internet().password());
 
-        User user = new User(request.username(), request.email(), request.password());
+        User user = UserTestStub.create(request.username(), request.email(), request.password());
         when(service.register(any(User.class))).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")

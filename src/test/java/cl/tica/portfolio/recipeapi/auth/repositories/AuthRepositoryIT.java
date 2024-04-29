@@ -1,16 +1,24 @@
 package cl.tica.portfolio.recipeapi.auth.repositories;
 
+import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,7 +31,14 @@ class AuthRepositoryIT {
     void findByUsername() {
         Optional<User> optionalUser = repository.findByUsernameIgnoreCase("admin");
         assertTrue(optionalUser.isPresent());
+        assertEquals(3, optionalUser.get().getId());
         assertEquals("admin", optionalUser.get().getUsername());
+        assertEquals("rgdevment@linkedin.com", optionalUser.get().getEmail());
+        assertNotNull(optionalUser.get().getPassword());
+        assertNotNull(optionalUser.get().getRoles());
+        assertNull(optionalUser.get().getUserData());
+        assertInstanceOf(LocalDateTime.class, optionalUser.get().getCreatedAt());
+        assertInstanceOf(LocalDateTime.class, optionalUser.get().getUpdatedAt());
     }
 
     @Test

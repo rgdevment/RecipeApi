@@ -12,3 +12,8 @@ INSERT INTO users_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO users_roles (user_id, role_id) VALUES (2, 1);
 INSERT INTO users_roles (user_id, role_id) VALUES (3, 1);
 INSERT INTO users_roles (user_id, role_id) VALUES (3, 2);
+
+-- User Roles
+INSERT INTO users_verification_token (id, code, created_at, user_id) VALUES (1, 'fake_code_1', '2024-04-22 21:03:38.230524', 1);
+INSERT INTO users_verification_token (id, code, created_at, user_id) VALUES (2, 'fake_code_2', '2024-04-25 11:03:38.230524', 2);
+INSERT INTO users_verification_token (id, code, created_at, user_id) VALUES (3, 'fake_code_3', '2024-04-25 11:05:38.230524', 3);
