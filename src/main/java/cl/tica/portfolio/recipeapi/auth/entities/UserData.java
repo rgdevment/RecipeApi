@@ -33,6 +33,9 @@ public class UserData {
     @Column
     private GenderType gender;
 
+    public UserData() {
+    }
+
     public UserData(String name, String lastname, GenderType gender) {
         this.name = name;
         this.lastname = lastname;

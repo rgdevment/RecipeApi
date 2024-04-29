@@ -3,13 +3,10 @@ package cl.tica.portfolio.recipeapi.auth.services;
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
-import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
-import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationTokenTestStub;
 import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
-import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,22 +40,21 @@ import static org.mockito.Mockito.when;
 class AuthServiceJpaTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     private AuthRepository authRepository;
     private RoleRepository roleRepository;
     private ApplicationEventPublisher eventPublisher;
-    private UserConfirmationRepository userConfirmationRepository;
-    private AuthService service;
+    private ConfirmationService confirmationService;
+    private AuthenticationService service;
 
     @BeforeEach
     void setUp() {
         this.authRepository = mock(AuthRepository.class);
         this.roleRepository = mock(RoleRepository.class);
         this.eventPublisher = mock(ApplicationEventPublisher.class);
-        this.userConfirmationRepository = mock(UserConfirmationRepository.class);
+        this.confirmationService = mock(ConfirmationService.class);
 
-        this.service = new AuthServiceJpa(authRepository, passwordEncoder,
-                roleRepository, eventPublisher, userConfirmationRepository);
+        this.service = new AuthenticationServiceJpa(authRepository, passwordEncoder,
+                roleRepository, eventPublisher, confirmationService);
     }
 
     @Test
@@ -93,6 +89,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(authRepository, times(1)).save(user);
+        verify(confirmationService, times(1)).generateVerificationToken(user);
         verify(eventPublisher, times(1)).publishEvent(any(OnRegistrationCompleteEvent.class));
     }
 
@@ -121,6 +118,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(authRepository, times(1)).save(user);
+        verify(confirmationService, times(1)).generateVerificationToken(user);
         verify(eventPublisher, times(1)).publishEvent(any(OnRegistrationCompleteEvent.class));
     }
 
@@ -139,6 +137,7 @@ class AuthServiceJpaTest {
         verify(authRepository, never()).existsByEmail(anyString());
         verify(roleRepository, never()).findByName(anyString());
         verify(authRepository, never()).save(any());
+        verify(confirmationService, never()).generateVerificationToken(any());
         verify(eventPublisher, never()).publishEvent(any());
     }
 
@@ -159,44 +158,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(roleRepository, never()).findByName(anyString());
         verify(authRepository, never()).save(any());
+        verify(confirmationService, never()).generateVerificationToken(any());
         verify(eventPublisher, never()).publishEvent(any());
-    }
-
-    @Test
-    void confirmEmailTokenNotFound() {
-        Faker faker = new Faker();
-        String code = faker.internet().uuid();
-        when(userConfirmationRepository.findUserConfirmationByCode(code)).thenReturn(Optional.empty());
-
-        assertFalse(service.confirmEmail(code));
-
-        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(code);
-    }
-
-    @Test
-    void confirmEmailTokenFoundUserNotPersistOrError() {
-        UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
-        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
-        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.empty());
-
-        assertFalse(service.confirmEmail(userVerificationToken.getCode()));
-
-        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(userVerificationToken.getCode());
-        verify(authRepository, times(1)).findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername());
-    }
-
-    @Test
-    void confirmEmailSuccessfully() {
-        UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
-        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
-        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.of(userVerificationToken.getUser()));
-
-        assertTrue(service.confirmEmail(userVerificationToken.getCode()));
-        assertTrue(userVerificationToken.getUser().isEmailVerified());
-        assertTrue(userVerificationToken.getUser().isAccountEnabled());
-        assertInstanceOf(LocalDateTime.class, userVerificationToken.getUser().getCreatedAt());
-
-        verify(userConfirmationRepository, times(1)).findUserConfirmationByCode(userVerificationToken.getCode());
-        verify(authRepository, times(1)).findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername());
     }
 }
