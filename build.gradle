@@ -42,8 +42,16 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
 }
 
+checkstyle {
+    toolVersion = '10.15.0'
+}
+
 test {
     jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
 
 jacocoTestReport {
@@ -63,12 +71,22 @@ jacocoTestReport {
     }
 }
 
-checkstyle {
-    toolVersion = '10.15.0'
-}
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 1.0
+            }
+        }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
+        rule {
+            limit {
+                counter = 'BRANCH'
+                minimum = 1.0
+            }
+        }
+    }
 }
 
 sonar {
@@ -79,3 +97,5 @@ sonar {
         property "sonar.java.coveragePlugin", "jacoco"
     }
 }
+
+check.dependsOn checkstyleMain, checkstyleTest, jacocoTestCoverageVerification
