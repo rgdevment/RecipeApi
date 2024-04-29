@@ -5,6 +5,7 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
 import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationTokenTestStub;
+import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
@@ -12,9 +13,10 @@ import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -39,10 +41,12 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class AuthServiceJpaTest {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private AuthRepository authRepository;
     private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+    private ApplicationEventPublisher eventPublisher;
     private UserConfirmationRepository userConfirmationRepository;
     private AuthService service;
 
@@ -50,10 +54,11 @@ class AuthServiceJpaTest {
     void setUp() {
         this.authRepository = mock(AuthRepository.class);
         this.roleRepository = mock(RoleRepository.class);
+        this.eventPublisher = mock(ApplicationEventPublisher.class);
         this.userConfirmationRepository = mock(UserConfirmationRepository.class);
-        this.passwordEncoder = new BCryptPasswordEncoder();
+
         this.service = new AuthServiceJpa(authRepository, passwordEncoder,
-                roleRepository, userConfirmationRepository);
+                roleRepository, eventPublisher, userConfirmationRepository);
     }
 
     @Test
@@ -88,6 +93,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(authRepository, times(1)).save(user);
+        verify(eventPublisher, times(1)).publishEvent(any(OnRegistrationCompleteEvent.class));
     }
 
     @Test
@@ -115,6 +121,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(authRepository, times(1)).save(user);
+        verify(eventPublisher, times(1)).publishEvent(any(OnRegistrationCompleteEvent.class));
     }
 
     @Test
@@ -132,6 +139,7 @@ class AuthServiceJpaTest {
         verify(authRepository, never()).existsByEmail(anyString());
         verify(roleRepository, never()).findByName(anyString());
         verify(authRepository, never()).save(any());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
 
@@ -151,6 +159,7 @@ class AuthServiceJpaTest {
         verify(authRepository, times(1)).existsByEmail(user.getEmail());
         verify(roleRepository, never()).findByName(anyString());
         verify(authRepository, never()).save(any());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test

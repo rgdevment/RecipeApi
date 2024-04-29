@@ -3,10 +3,12 @@ package cl.tica.portfolio.recipeapi.auth.services;
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
+import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,15 @@ public class AuthServiceJpa implements AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final UserConfirmationRepository userConfirmationRepository;
 
     public AuthServiceJpa(AuthRepository repository, PasswordEncoder passwordEncoder, RoleRepository roleRepository,
-                          UserConfirmationRepository userConfirmationRepository) {
+                          ApplicationEventPublisher eventPublisher, UserConfirmationRepository userConfirmationRepository) {
         this.authRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.eventPublisher = eventPublisher;
         this.userConfirmationRepository = userConfirmationRepository;
     }
 
@@ -38,8 +42,11 @@ public class AuthServiceJpa implements AuthService {
         validateNewUser(user);
         assignDefaultRole(user);
         encryptPassword(user);
+
         User savedUser = saveUser(user);
         generateVerificationCode(savedUser);
+
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(this, savedUser.getUsername()));
 
         return savedUser;
     }
@@ -79,11 +86,6 @@ public class AuthServiceJpa implements AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
-    private void generateVerificationCode(User savedUser) {
-        UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
-        userConfirmationRepository.save(userVerificationToken);
-    }
-
     private void activateUser(User user) {
         user.setAccountEnabled(true);
         user.setEmailVerified(true);
@@ -92,5 +94,10 @@ public class AuthServiceJpa implements AuthService {
 
     private User saveUser(User user) {
         return authRepository.save(user);
+    }
+
+    private void generateVerificationCode(User savedUser) {
+        UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
+        userConfirmationRepository.save(userVerificationToken);
     }
 }
