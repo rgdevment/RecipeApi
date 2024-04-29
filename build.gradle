@@ -42,8 +42,16 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
 }
 
+checkstyle {
+    toolVersion = '10.15.0'
+}
+
 test {
     jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
 
 jacocoTestReport {
@@ -52,14 +60,33 @@ jacocoTestReport {
         csv.required = true
         xml.required = true
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "cl/tica/portfolio/recipeapi/auth/security/**",
+                    "cl/tica/portfolio/recipeapi/RecipeApiApplication.class",
+            ])
+        }))
+    }
 }
 
-checkstyle {
-    toolVersion = '10.15.0'
-}
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 0.5
+            }
+        }
 
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
+        rule {
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.5
+            }
+        }
+    }
 }
 
 sonar {
@@ -70,3 +97,5 @@ sonar {
         property "sonar.java.coveragePlugin", "jacoco"
     }
 }
+
+check.dependsOn checkstyleMain, checkstyleTest, jacocoTestCoverageVerification

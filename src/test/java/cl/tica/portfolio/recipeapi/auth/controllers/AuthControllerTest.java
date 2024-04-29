@@ -3,6 +3,7 @@ package cl.tica.portfolio.recipeapi.auth.controllers;
 import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -60,11 +60,8 @@ class AuthControllerTest {
         SignupRequest request = new SignupRequest(faker.internet().username(),
                 faker.internet().emailAddress(), faker.internet().password());
 
-        User user = new User(request.username(), request.email(), request.password());
-        when(service.existsByUsername(request.username())).thenReturn(false);
-        when(service.existsByEmail(request.email())).thenReturn(false);
-        when(service.save(any(User.class))).thenReturn(user);
-
+        User user = UserTestStub.create(request.username(), request.email(), request.password());
+        when(service.register(any(User.class))).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,52 +72,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.password").doesNotExist());
 
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, times(1)).existsByEmail(request.email());
-        verify(service, times(1)).save(any(User.class));
-    }
-
-    @Test
-    void registerUserIfUsernameExist() throws Exception {
-        Faker faker = new Faker();
-        SignupRequest request = new SignupRequest(faker.internet().username(),
-                faker.internet().emailAddress(), faker.internet().password());
-
-        when(service.existsByUsername(request.username())).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("Username is already taken!."));
-
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, never()).existsByEmail(anyString());
-        verify(service, never()).save(any(User.class));
-    }
-
-    @Test
-    void registerUserIfEmailExist() throws Exception {
-        Faker faker = new Faker();
-        SignupRequest request = new SignupRequest(faker.internet().username(),
-                faker.internet().emailAddress(), faker.internet().password());
-
-        when(service.existsByUsername(request.username())).thenReturn(false);
-        when(service.existsByEmail(request.email())).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("UserAlreadyExistException"))
-                .andExpect(jsonPath("$.message").value("the email is already registered."));
-
-        verify(service, times(1)).existsByUsername(request.username());
-        verify(service, times(1)).existsByEmail(request.email());
-        verify(service, never()).save(any(User.class));
+        verify(service, times(1)).register(any(User.class));
     }
 
     @Test
@@ -162,5 +114,34 @@ class AuthControllerTest {
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, never()).generateToken(any(Authentication.class));
+    }
+
+    @Test
+    void confirmUserAccount() throws Exception {
+        Faker faker = new Faker();
+        String code = faker.internet().uuid();
+        when(service.confirmEmail(code)).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("User and email verify successfully."));
+
+        verify(service, times(1)).confirmEmail(code);
+    }
+
+    @Test
+    void confirmUserAccountInvalidToken() throws Exception {
+        Faker faker = new Faker();
+        String code = faker.internet().uuid();
+        when(service.confirmEmail(code)).thenReturn(false);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.title").value("InvalidConfirmationException"))
+                .andExpect(jsonPath("$.message").value("Validation was not possible, the token or user is not valid."));
+
+        verify(service, times(1)).confirmEmail(code);
     }
 }

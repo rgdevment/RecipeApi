@@ -32,4 +32,10 @@ public class UserData {
 
     @Column
     private GenderType gender;
+
+    public UserData(String name, String lastname, GenderType gender) {
+        this.name = name;
+        this.lastname = lastname;
+        this.gender = gender;
+    }
 }
