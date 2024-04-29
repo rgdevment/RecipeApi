@@ -1,4 +1,4 @@
-![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/continuous-integration.yml/badge.svg)
+![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/main.yml/badge.svg)
 
 # RecipeAPI
 
