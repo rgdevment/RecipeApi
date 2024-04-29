@@ -19,10 +19,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Check Styles
+      - name: Check Styles Source
         run: ./gradlew checkstyleMain
 
-      - name: Check Styles
+      - name: Check Styles Tests
         run: ./gradlew checkstyleMain
 
       - name: Unit Tests
