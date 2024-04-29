@@ -5,32 +5,29 @@ import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, OutputCaptureExtension.class})
 @SpringBootTest
 class SendVerificationEmailListenerTest {
     @InjectMocks
     private SendVerificationEmailListener sendVerificationEmailListener;
 
-    private static final Logger LOGGER = spy(LoggerFactory.getLogger(SendVerificationEmailListener.class));
 
     @Test
-    void testHandleUserRegistrationEvent() {
+    void testHandleUserRegistrationEvent(CapturedOutput output) {
         Faker faker = new Faker();
         String username = faker.internet().username();
         OnRegistrationCompleteEvent event = new OnRegistrationCompleteEvent(this, username);
         assertEquals(username, event.getUsername());
 
         sendVerificationEmailListener.handleSendVerificationEmailListener(event);
-        verify(LOGGER, times(1)).info("Sending verification email with username {}.", event.getUsername());
+        assertThat(output).contains(String.format("Sending verification email with username %s.", event.getUsername()));
     }
 }
