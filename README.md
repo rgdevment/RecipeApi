@@ -1,5 +1,5 @@
-![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/main.yml/badge.svg)
-
+[![Build Status](https://github.com/rgdevment/RecipeApi/actions/workflows/main.yml/badge.svg)](https://github.com/rgdevment/RecipeApi/actions/workflows/main.yml)
+[![Coverage](https://rgdevment.github.io/RecipeApi/badges/jacoco.svg)](https://rgdevment.github.io/RecipeApi)
 # RecipeAPI
 
 REST API for registering recipes by country culture and preferences, with ratings and automatic ingredient calculation based on the number of people, including cooking times among others.
