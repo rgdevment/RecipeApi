@@ -5,7 +5,7 @@ import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
-import cl.tica.portfolio.recipeapi.auth.services.AuthService;
+import cl.tica.portfolio.recipeapi.auth.services.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,14 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
+@WebMvcTest(AuthenticationController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private AuthService service;
+    private AuthenticationService service;
 
     @MockBean
     private AuthenticationManager authenticationManager;
@@ -114,34 +114,5 @@ class AuthControllerTest {
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, never()).generateToken(any(Authentication.class));
-    }
-
-    @Test
-    void confirmUserAccount() throws Exception {
-        Faker faker = new Faker();
-        String code = faker.internet().uuid();
-        when(service.confirmEmail(code)).thenReturn(true);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("User and email verify successfully."));
-
-        verify(service, times(1)).confirmEmail(code);
-    }
-
-    @Test
-    void confirmUserAccountInvalidToken() throws Exception {
-        Faker faker = new Faker();
-        String code = faker.internet().uuid();
-        when(service.confirmEmail(code)).thenReturn(false);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
-                .andExpect(status().isUnauthorized())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("InvalidConfirmationException"))
-                .andExpect(jsonPath("$.message").value("Validation was not possible, the token or user is not valid."));
-
-        verify(service, times(1)).confirmEmail(code);
     }
 }

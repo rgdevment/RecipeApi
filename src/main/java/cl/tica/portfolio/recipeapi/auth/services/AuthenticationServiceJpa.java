@@ -2,12 +2,10 @@ package cl.tica.portfolio.recipeapi.auth.services;
 
 import cl.tica.portfolio.recipeapi.auth.entities.Role;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
-import cl.tica.portfolio.recipeapi.auth.entities.UserVerificationToken;
 import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
 import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
-import cl.tica.portfolio.recipeapi.auth.repositories.UserConfirmationRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,25 +13,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cl.tica.portfolio.recipeapi.auth.entities.Role.DEFAULT_ROLE;
 
 @Service
-public class AuthServiceJpa implements AuthService {
+public class AuthenticationServiceJpa implements AuthenticationService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ConfirmationService confirmationService;
     private final ApplicationEventPublisher eventPublisher;
-    private final UserConfirmationRepository userConfirmationRepository;
 
-    public AuthServiceJpa(AuthRepository repository, PasswordEncoder passwordEncoder, RoleRepository roleRepository,
-                          ApplicationEventPublisher eventPublisher, UserConfirmationRepository userConfirmationRepository) {
+
+    public AuthenticationServiceJpa(AuthRepository repository,
+                                    PasswordEncoder passwordEncoder,
+                                    RoleRepository roleRepository,
+                                    ApplicationEventPublisher eventPublisher,
+                                    ConfirmationService confirmationService
+    ) {
         this.authRepository = repository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.eventPublisher = eventPublisher;
-        this.userConfirmationRepository = userConfirmationRepository;
+        this.confirmationService = confirmationService;
     }
 
     @Override
@@ -44,28 +46,11 @@ public class AuthServiceJpa implements AuthService {
         encryptPassword(user);
 
         User savedUser = saveUser(user);
-        generateVerificationCode(savedUser);
 
+        confirmationService.generateVerificationToken(savedUser);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(this, savedUser.getUsername()));
 
         return savedUser;
-    }
-
-    @Override
-    @Transactional()
-    public boolean confirmEmail(String code) {
-        AtomicBoolean isConfirmed = new AtomicBoolean(false);
-
-        userConfirmationRepository.findUserConfirmationByCode(code)
-                .ifPresent(token ->
-                        authRepository.findByUsernameIgnoreCase(token.getUser().getUsername())
-                                .ifPresent(user -> {
-                                    activateUser(user);
-                                    userConfirmationRepository.delete(token);
-                                    isConfirmed.set(true);
-                                }));
-
-        return isConfirmed.get();
     }
 
     private void validateNewUser(User user) {
@@ -86,18 +71,7 @@ public class AuthServiceJpa implements AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
-    private void activateUser(User user) {
-        user.setAccountEnabled(true);
-        user.setEmailVerified(true);
-        saveUser(user);
-    }
-
     private User saveUser(User user) {
         return authRepository.save(user);
-    }
-
-    private void generateVerificationCode(User savedUser) {
-        UserVerificationToken userVerificationToken = new UserVerificationToken(savedUser);
-        userConfirmationRepository.save(userVerificationToken);
     }
 }
