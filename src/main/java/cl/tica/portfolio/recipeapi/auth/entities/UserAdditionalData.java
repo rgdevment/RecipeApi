@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "users_data")
-public class UserData {
+@Table(name = "users_additional_data")
+public class UserAdditionalData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,12 +33,38 @@ public class UserData {
     @Column
     private GenderType gender;
 
-    public UserData() {
+    public UserAdditionalData() {
     }
 
-    public UserData(String name, String lastname, GenderType gender) {
-        this.name = name;
-        this.lastname = lastname;
+    public UserAdditionalData(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public @NotEmpty String getName() {
+        return name;
+    }
+
+    public @NotEmpty String getLastname() {
+        return lastname;
+    }
+
+    public GenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderType gender) {
         this.gender = gender;
+    }
+
+    public void setLastname(@NotEmpty String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setName(@NotEmpty String name) {
+        this.name = name;
     }
 }
