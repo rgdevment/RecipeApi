@@ -1,6 +1,7 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
 import cl.tica.portfolio.recipeapi.auth.dto.request.AdditionalDataRequest;
+import cl.tica.portfolio.recipeapi.auth.dto.response.UpdatedUserResponse;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserAdditionalData;
@@ -36,7 +37,7 @@ public class UserAdditionalDataController {
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
     @PutMapping("/additional-data")
-    public ResponseEntity<UserConfirmationResponse> addUserAdditionalData(@Valid @RequestBody AdditionalDataRequest request) {
+    public ResponseEntity<UpdatedUserResponse> addUserAdditionalData(@Valid @RequestBody AdditionalDataRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         User user = userAdditionalDataService.findUserByUsername(auth.getName());
@@ -46,8 +47,13 @@ public class UserAdditionalDataController {
         userAdditionalData.setGender(GenderType.valueOf(request.gender().toUpperCase()));
         user.setUserData(userAdditionalData);
 
-        userAdditionalDataService.updateUserData(user);
+        User userSaved = userAdditionalDataService.updateUserData(user);
 
-        return ResponseEntity.ok(new UserConfirmationResponse("Additional user information updated successfully."));
+        return ResponseEntity.ok(new UpdatedUserResponse(
+                userSaved.getUsername(),
+                userSaved.getEmail(),
+                userSaved.getRoles(),
+                userSaved.getUserData()
+        ));
     }
 }

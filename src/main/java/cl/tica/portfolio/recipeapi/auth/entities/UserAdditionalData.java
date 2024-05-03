@@ -1,6 +1,7 @@
 package cl.tica.portfolio.recipeapi.auth.entities;
 
 import cl.tica.portfolio.recipeapi.auth.enums.GenderType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ public class UserAdditionalData {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private User user;
 
     @NotEmpty

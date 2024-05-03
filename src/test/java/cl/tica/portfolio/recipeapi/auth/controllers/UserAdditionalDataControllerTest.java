@@ -25,6 +25,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(SecurityConfig.class)
@@ -44,27 +46,41 @@ class UserAdditionalDataControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser")
+    @WithMockUser(username = "user_enabled")
     void addUserAdditionalData() throws Exception {
         Faker faker = new Faker();
-        User userFake = UserTestStub.create("testUser", "", "");
-        UserAdditionalData userAdditionalData = userFake.getUserData();
-        userAdditionalData.setName(faker.name().firstName());
-        userAdditionalData.setLastname(faker.name().lastName());
-        userAdditionalData.setGender(GenderType.OTHER);
+        String name = faker.name().firstName();
+        String lastname = faker.name().lastName();
+        GenderType other = GenderType.OTHER;
+
+        User user = UserTestStub.create("user_enabled", "", "");
+        UserAdditionalData userAdditionalData = user.getUserData();
+        userAdditionalData.setName(name);
+        userAdditionalData.setLastname(lastname);
+        userAdditionalData.setGender(other);
 
         AdditionalDataRequest request = new AdditionalDataRequest(userAdditionalData.getName(),
                 userAdditionalData.getLastname(), userAdditionalData.getGender().name());
 
-        when(service.findUserByUsername(userFake.getUsername())).thenReturn(userFake);
+        user.setUserData(userAdditionalData);
+
+        when(service.findUserByUsername(user.getUsername())).thenReturn(user);
+        when(service.updateUserData(user)).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/v1/user/additional-data")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.roles").exists())
+                .andExpect(jsonPath("$.additional_data.name").value(user.getUserData().getName()))
+                .andExpect(jsonPath("$.additional_data.lastname").value(user.getUserData().getLastname()))
+                .andExpect(jsonPath("$.additional_data.gender").value(user.getUserData().getGender().name()));
 
-        verify(service, times(1)).findUserByUsername(userFake.getUsername());
-        verify(service, times(1)).updateUserData(userFake);
+        verify(service, times(1)).findUserByUsername(user.getUsername());
+        verify(service, times(1)).updateUserData(user);
     }
 
     @Test
