@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users_additional_data")
@@ -30,7 +31,8 @@ public class UserAdditionalData {
     @Column(nullable = false)
     private String lastname;
 
-    @Column
+    @NotNull
+    @Column(nullable = false)
     private GenderType gender;
 
     public UserAdditionalData() {

@@ -3,7 +3,7 @@ package cl.tica.portfolio.recipeapi.auth.controllers;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.services.ConfirmationService;
-import cl.tica.portfolio.recipeapi.models.ExceptionWrappingError;
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

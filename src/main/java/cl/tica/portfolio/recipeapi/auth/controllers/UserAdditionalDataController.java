@@ -1,12 +1,12 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
 import cl.tica.portfolio.recipeapi.auth.dto.request.AdditionalDataRequest;
-import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserAdditionalData;
+import cl.tica.portfolio.recipeapi.auth.enums.GenderType;
 import cl.tica.portfolio.recipeapi.auth.services.UserAdditionalDataService;
-import cl.tica.portfolio.recipeapi.models.ExceptionWrappingError;
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,7 +43,7 @@ public class UserAdditionalDataController {
         UserAdditionalData userAdditionalData = user.getUserData();
         userAdditionalData.setName(request.name());
         userAdditionalData.setLastname(request.lastname());
-        userAdditionalData.setGender(request.gender());
+        userAdditionalData.setGender(GenderType.valueOf(request.gender().toUpperCase()));
 
         userAdditionalDataService.updateUserData(user);
 

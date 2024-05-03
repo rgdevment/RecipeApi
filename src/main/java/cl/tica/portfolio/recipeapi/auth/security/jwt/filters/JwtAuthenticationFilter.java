@@ -1,15 +1,17 @@
 package cl.tica.portfolio.recipeapi.auth.security.jwt.filters;
 
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import cl.tica.portfolio.recipeapi.auth.security.GrantedAuthorityJson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +20,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -52,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            throw new AuthenticationCredentialsNotFoundException(e.getMessage());
+            wrapAndHandleError(request, response, e);
         }
     }
 
@@ -63,5 +68,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 new ObjectMapper()
                         .addMixIn(SimpleGrantedAuthority.class, GrantedAuthorityJson.class)
                         .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
+    }
+
+    private void wrapAndHandleError(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
+        String errMsg = e instanceof SignatureException
+                ? "Invalid or expired token."
+                : e.getMessage();
+
+        ExceptionWrappingError error = new ExceptionWrappingError(
+                e.getClass().getSimpleName(),
+                HttpServletResponse.SC_UNAUTHORIZED,
+                errMsg,
+                request.getRequestURI()
+        );
+        response.setStatus(error.getStatus());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        OutputStream out = response.getOutputStream();
+        OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+        writer.write(error.toJSONString());
+        writer.flush();
     }
 }
