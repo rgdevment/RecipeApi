@@ -55,6 +55,7 @@ tasks.withType(Test).configureEach {
 }
 
 def exclusions = [
+        "cl/tica/portfolio/recipeapi/application/controllers/ValidationExceptionHandler.class",
         "cl/tica/portfolio/recipeapi/auth/security/**",
         "cl/tica/portfolio/recipeapi/RecipeApiApplication.class"
 ]

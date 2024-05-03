@@ -132,6 +132,7 @@ class AuthServiceJpaTest {
 
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         assertEquals("Username is already taken.", exception.getReason());
+        assertEquals(UserAlreadyExistException.USER_ALREADY_EXIST, exception.getInternalCode());
 
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, never()).existsByEmail(anyString());
