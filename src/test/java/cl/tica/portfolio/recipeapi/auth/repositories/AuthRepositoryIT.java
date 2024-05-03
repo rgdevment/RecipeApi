@@ -24,10 +24,10 @@ class AuthRepositoryIT {
 
     @Test
     void findByUsername() {
-        Optional<User> optionalUser = repository.findByUsernameIgnoreCase("admin");
+        Optional<User> optionalUser = repository.findByUsernameIgnoreCase("user_admin");
         assertTrue(optionalUser.isPresent());
         assertEquals(3, optionalUser.get().getId());
-        assertEquals("admin", optionalUser.get().getUsername());
+        assertEquals("user_admin", optionalUser.get().getUsername());
         assertEquals("rgdevment@linkedin.com", optionalUser.get().getEmail());
         assertNotNull(optionalUser.get().getPassword());
         assertNotNull(optionalUser.get().getRoles());
@@ -46,7 +46,7 @@ class AuthRepositoryIT {
 
     @Test
     void existsByUsername() {
-        boolean exists = repository.existsByUsername("admin");
+        boolean exists = repository.existsByUsername("user_admin");
         assertTrue(exists);
     }
 
