@@ -25,7 +25,7 @@ public class SwaggerConfig {
     OpenAPI openApi() {
         License apacheLicence = new License()
                 .name("Apache 2.0 License")
-                .url("https://choosealicense.com/licenses/apache-2.0/");
+                .url("https://choosealicense.com/licenses/mit/");
 
         Contact contact = new Contact();
         contact.name("Recipe API");
