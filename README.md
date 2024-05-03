@@ -37,4 +37,4 @@ Working...
 
 ## License
 
-This project is licensed under the [Apache License 2.0](LICENSE.md). See the [LICENSE.md](LICENSE.md) file for more details.
+This project is licensed under the [MIT License](LICENSE.md). See the [LICENSE.md](LICENSE.md) file for more details.
