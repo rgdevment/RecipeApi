@@ -63,7 +63,7 @@ public class User {
     private final List&lt;Role&gt; roles = new ArrayList&lt;&gt;();
 
     @OneToOne(mappedBy = &quot;user&quot;, cascade = CascadeType.ALL)
-    private UserData userData;
+    private UserAdditionalData userAdditionalData;
 
     @NotNull
     @Column(nullable = false)
@@ -124,44 +124,47 @@ public class User {
 <span class="fc" id="L124">        return roles;</span>
     }
 
-    public UserData getUserData() {
-<span class="fc" id="L128">        return userData;</span>
+    public UserAdditionalData getUserData() {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (this.userAdditionalData == null) {</span>
+<span class="fc" id="L129">            this.userAdditionalData = new UserAdditionalData(this);</span>
+        }
+<span class="fc" id="L131">        return this.userAdditionalData;</span>
     }
 
     public boolean isAccountEnabled() {
-<span class="fc" id="L132">        return accountEnabled;</span>
+<span class="fc" id="L135">        return accountEnabled;</span>
     }
 
     public boolean isEmailVerified() {
-<span class="fc" id="L136">        return emailVerified;</span>
+<span class="fc" id="L139">        return emailVerified;</span>
     }
 
     public LocalDateTime getCreatedAt() {
-<span class="fc" id="L140">        return createdAt;</span>
+<span class="fc" id="L143">        return createdAt;</span>
     }
 
     public LocalDateTime getUpdatedAt() {
-<span class="fc" id="L144">        return updatedAt;</span>
+<span class="fc" id="L147">        return updatedAt;</span>
     }
 
     public void setPassword(String password) {
-<span class="fc" id="L148">        this.password = password;</span>
-<span class="fc" id="L149">    }</span>
+<span class="fc" id="L151">        this.password = password;</span>
+<span class="fc" id="L152">    }</span>
 
     public void addRole(Role role) {
-<span class="fc" id="L152">        this.roles.add(role);</span>
-<span class="fc" id="L153">    }</span>
+<span class="fc" id="L155">        this.roles.add(role);</span>
+<span class="fc" id="L156">    }</span>
 
-    public void setUserData(UserData userData) {
-<span class="fc" id="L156">        this.userData = userData;</span>
-<span class="fc" id="L157">    }</span>
+    public void setUserData(UserAdditionalData userAdditionalData) {
+<span class="fc" id="L159">        this.userAdditionalData = userAdditionalData;</span>
+<span class="fc" id="L160">    }</span>
 
     public void setEmailVerified(boolean emailVerified) {
-<span class="fc" id="L160">        this.emailVerified = emailVerified;</span>
-<span class="fc" id="L161">    }</span>
+<span class="fc" id="L163">        this.emailVerified = emailVerified;</span>
+<span class="fc" id="L164">    }</span>
 
     public void setAccountEnabled(boolean accountEnabled) {
-<span class="fc" id="L164">        this.accountEnabled = accountEnabled;</span>
-<span class="fc" id="L165">    }</span>
+<span class="fc" id="L167">        this.accountEnabled = accountEnabled;</span>
+<span class="fc" id="L168">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

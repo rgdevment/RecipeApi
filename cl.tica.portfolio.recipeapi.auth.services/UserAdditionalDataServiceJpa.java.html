@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserAdditionalDataServiceJpa.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RecipeApi</a> &gt; <a href="index.source.html" class="el_package">cl.tica.portfolio.recipeapi.auth.services</a> &gt; <span class="el_source">UserAdditionalDataServiceJpa.java</span></div><h1>UserAdditionalDataServiceJpa.java</h1><pre class="source lang-java linenums">package cl.tica.portfolio.recipeapi.auth.services;
+
+import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class UserAdditionalDataServiceJpa implements UserAdditionalDataService {
+    private final AuthRepository authRepository;
+
+<span class="fc" id="L13">    public UserAdditionalDataServiceJpa(AuthRepository authRepository) {</span>
+<span class="fc" id="L14">        this.authRepository = authRepository;</span>
+<span class="fc" id="L15">    }</span>
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findUserByUsername(String username) {
+<span class="fc" id="L20">        return authRepository.findByUsernameIgnoreCase(username)</span>
+<span class="fc" id="L21">                .orElseThrow(() -&gt; new UsernameNotFoundException(username));</span>
+    }
+
+    @Override
+    @Transactional()
+    public User updateUserData(User user) {
+<span class="fc" id="L27">        return authRepository.save(user);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
