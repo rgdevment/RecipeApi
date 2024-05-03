@@ -2,6 +2,9 @@ package cl.tica.portfolio.recipeapi.application.models;
 
 import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,25 +54,26 @@ public class ExceptionWrappingError {
         return instance;
     }
 
-    public List<?> getErrors() {
+    public List<ValidationFieldsError> getErrors() {
         return errors;
     }
 
     public String toJSONString() {
-        StringBuilder jsonBuilder = new StringBuilder("{"
-                + "\"timespan\": \"" + getTimespan() + "\","
-                + "\"status\": " + getStatus() + ","
-                + "\"code\": \"" + getCode() + "\","
-                + "\"details\": \"" + getDetails() + "\","
-                + "\"instance\": \"" + getInstance() + "\"");
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode node = mapper.createObjectNode();
+        node.put("timespan", getTimespan().toString());
+        node.put("status", getStatus());
+        node.put("code", getCode());
+        node.put("details", getDetails());
+        node.put("instance", getInstance());
 
         if (!getErrors().isEmpty()) {
-            jsonBuilder.append(",\"errors\": ").append(getErrors());
+            ArrayNode errorsNode = mapper.valueToTree(getErrors());
+            node.set("errors", errorsNode);
         }
 
-        jsonBuilder.append("}");
-
-        return jsonBuilder.toString();
+        return node.toString();
     }
 
 }
