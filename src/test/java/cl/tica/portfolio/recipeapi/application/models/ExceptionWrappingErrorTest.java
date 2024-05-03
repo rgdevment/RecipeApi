@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.application.models;
 
+import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,9 @@ class ExceptionWrappingErrorTest {
 
     @Test
     void toJSONString() {
-        Exception exception = new Exception();
-        ArrayList<Object> errorsList = new ArrayList<>();
-        errorsList.add(exception);
+        ArrayList<ValidationFieldsError> errorsList = new ArrayList<>();
+        ValidationFieldsError fieldError = new ValidationFieldsError("Field", "Type", "detail");
+        errorsList.add(fieldError);
 
         ExceptionWrappingError error = new ExceptionWrappingError(
                 400,

@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.application.models;
 
+import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
@@ -15,9 +16,9 @@ public class ExceptionWrappingError {
     private final String instance;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private final List<?> errors;
+    private final List<ValidationFieldsError> errors;
 
-    public ExceptionWrappingError(int status, String code, String details, String instance, List<?> errors) {
+    public ExceptionWrappingError(int status, String code, String details, String instance, List<ValidationFieldsError> errors) {
         this.timespan = LocalDateTime.now();
         this.status = status;
         this.code = code;
