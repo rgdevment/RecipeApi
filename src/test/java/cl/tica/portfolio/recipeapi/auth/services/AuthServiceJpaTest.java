@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -80,7 +80,7 @@ class AuthServiceJpaTest {
         assertEquals(user.getRoles().getFirst().getName(), result.getRoles().getFirst().getName());
         assertFalse(result.isAccountEnabled());
         assertFalse(result.isEmailVerified());
-        assertNull(result.getUserData());
+        assertNotNull(result.getUserData());
         assertInstanceOf(LocalDateTime.class, user.getCreatedAt());
         assertInstanceOf(LocalDateTime.class, user.getUpdatedAt());
         assertFalse(result.isEmailVerified());
@@ -132,6 +132,7 @@ class AuthServiceJpaTest {
 
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         assertEquals("Username is already taken.", exception.getReason());
+        assertEquals(UserAlreadyExistException.USER_ALREADY_EXIST, exception.getInternalCode());
 
         verify(authRepository, times(1)).existsByUsername(user.getUsername());
         verify(authRepository, never()).existsByEmail(anyString());

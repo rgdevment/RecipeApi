@@ -22,7 +22,11 @@ public class UserTestStub {
 
         user.setAccountEnabled(false);
         user.setEmailVerified(false);
-        user.setUserData(new UserData(faker.name().firstName(), faker.name().lastName(), GenderType.OTHER));
+        UserAdditionalData userAdditionalData = new UserAdditionalData(user);
+        userAdditionalData.setName(faker.name().firstName());
+        userAdditionalData.setLastname(faker.name().lastName());
+        userAdditionalData.setGender(GenderType.OTHER);
+        user.setUserData(userAdditionalData);
 
         return user;
     }

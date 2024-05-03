@@ -63,7 +63,7 @@ public class User {
     private final List<Role> roles = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserData userData;
+    private UserAdditionalData userAdditionalData;
 
     @NotNull
     @Column(nullable = false)
@@ -124,8 +124,11 @@ public class User {
         return roles;
     }
 
-    public UserData getUserData() {
-        return userData;
+    public UserAdditionalData getUserData() {
+        if (this.userAdditionalData == null) {
+            this.userAdditionalData = new UserAdditionalData(this);
+        }
+        return this.userAdditionalData;
     }
 
     public boolean isAccountEnabled() {
@@ -152,8 +155,8 @@ public class User {
         this.roles.add(role);
     }
 
-    public void setUserData(UserData userData) {
-        this.userData = userData;
+    public void setUserData(UserAdditionalData userAdditionalData) {
+        this.userAdditionalData = userAdditionalData;
     }
 
     public void setEmailVerified(boolean emailVerified) {

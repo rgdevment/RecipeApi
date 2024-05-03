@@ -1,4 +1,4 @@
-package cl.tica.portfolio.recipeapi.configs;
+package cl.tica.portfolio.recipeapi.application.configs;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -4,6 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
+import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,8 +110,8 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("InvalidCredentialsException"))
-                .andExpect(jsonPath("$.message").value("Credentials do not match or the user is not activated."));
+                .andExpect(jsonPath("$.code").value(InvalidCredentialsException.INVALID_CREDENTIALS))
+                .andExpect(jsonPath("$.details").value("Credentials do not match or the user is not activated."));
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtils, never()).generateToken(any(Authentication.class));

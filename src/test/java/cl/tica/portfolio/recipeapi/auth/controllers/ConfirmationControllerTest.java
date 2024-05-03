@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
+import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.services.ConfirmationService;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.Test;
@@ -50,8 +51,8 @@ class ConfirmationControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/v1/auth/confirm-account/" + code))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.title").value("InvalidConfirmationException"))
-                .andExpect(jsonPath("$.message").value("Validation was not possible, the token or user is not valid."));
+                .andExpect(jsonPath("$.code").value(InvalidConfirmationException.INVALID_CONFIRMATION))
+                .andExpect(jsonPath("$.details").value("Validation was not possible, the token or user is not valid."));
 
         verify(service, times(1)).confirmEmail(code);
     }
