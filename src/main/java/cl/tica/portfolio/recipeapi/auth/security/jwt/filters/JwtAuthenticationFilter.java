@@ -10,6 +10,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,8 +77,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 : e.getMessage();
 
         ExceptionWrappingError error = new ExceptionWrappingError(
-                e.getClass().getSimpleName(),
-                HttpServletResponse.SC_UNAUTHORIZED,
+                HttpStatus.FORBIDDEN.name(),
+                HttpServletResponse.SC_FORBIDDEN,
                 errMsg,
                 request.getRequestURI()
         );
