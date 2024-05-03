@@ -23,7 +23,7 @@ public class UserAdditionalDataServiceJpa implements UserAdditionalDataService {
 
     @Override
     @Transactional()
-    public void updateUserData(User user) {
-        authRepository.save(user);
+    public User updateUserData(User user) {
+        return authRepository.save(user);
     }
 }

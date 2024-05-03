@@ -44,6 +44,7 @@ public class UserAdditionalDataController {
         userAdditionalData.setName(request.name());
         userAdditionalData.setLastname(request.lastname());
         userAdditionalData.setGender(GenderType.valueOf(request.gender().toUpperCase()));
+        user.setUserData(userAdditionalData);
 
         userAdditionalDataService.updateUserData(user);
 
