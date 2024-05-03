@@ -6,7 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class UserAlreadyExistException extends ResponseStatusException implements ApiException {
 
-    public static final String USER_ALREADY_EXIST = "USER_ALREADY_EXIST";
+    public static final String USER_ALREADY_EXIST = "INVALID_USER";
 
     public UserAlreadyExistException(HttpStatusCode status, String reason) {
         super(status, reason);

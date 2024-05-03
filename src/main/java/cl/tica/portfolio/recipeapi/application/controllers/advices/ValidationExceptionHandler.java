@@ -1,4 +1,4 @@
-package cl.tica.portfolio.recipeapi.application.controllers;
+package cl.tica.portfolio.recipeapi.application.controllers.advices;
 
 import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
 import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
@@ -13,6 +13,9 @@ import java.util.List;
 
 @ControllerAdvice
 public class ValidationExceptionHandler {
+
+    private static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
+
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ExceptionWrappingError> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, WebRequest request) {
         List<ValidationFieldsError> errors = exception.getFieldErrors().stream()
@@ -25,7 +28,7 @@ public class ValidationExceptionHandler {
 
         ExceptionWrappingError error = new ExceptionWrappingError(
                 exception.getStatusCode().value(),
-                exception.getClass().getSimpleName(),
+                INVALID_ARGUMENT,
                 exception.getBody().getDetail(),
                 fullPath,
                 errors
