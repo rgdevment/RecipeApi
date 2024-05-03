@@ -9,7 +9,7 @@ import java.util.List;
 public class ExceptionWrappingError {
 
     private final Date timespan;
-    private final String title;
+    private final String code;
     private final int status;
     private final String detail;
     private final String instance;
@@ -17,25 +17,25 @@ public class ExceptionWrappingError {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<?> errors;
 
-    public ExceptionWrappingError(String title, int status, String detail, String instance, List<?> errors) {
+    public ExceptionWrappingError(int status, String code, String detail, String instance, List<?> errors) {
         this.timespan = new Date(System.currentTimeMillis());
-        this.title = title;
         this.status = status;
+        this.code = code;
         this.detail = detail;
         this.instance = instance;
         this.errors = errors;
     }
 
-    public ExceptionWrappingError(String title, int status, String detail, String instance) {
-        this(title, status, detail, instance, new ArrayList<>());
+    public ExceptionWrappingError(int status, String code, String detail, String instance) {
+        this(status, code, detail, instance, new ArrayList<>());
     }
 
     public Date getTimespan() {
         return timespan;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCode() {
+        return code;
     }
 
     public int getStatus() {
@@ -57,8 +57,8 @@ public class ExceptionWrappingError {
     public String toJSONString() {
         StringBuilder jsonBuilder = new StringBuilder("{"
                 + "\"timespan\": \"" + getTimespan() + "\","
-                + "\"title\": \"" + getTitle() + "\","
                 + "\"status\": " + getStatus() + ","
+                + "\"code\": \"" + getCode() + "\","
                 + "\"detail\": \"" + getDetail() + "\","
                 + "\"instance\": \"" + getInstance() + "\"");
 

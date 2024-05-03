@@ -33,6 +33,7 @@ import static cl.tica.portfolio.recipeapi.auth.security.jwt.JwtTokenConfig.SECRE
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String NOT_ALLOWED = "NOT_ALLOWED";
 
     @Override
     protected void doFilterInternal(
@@ -77,11 +78,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 : e.getMessage();
 
         ExceptionWrappingError error = new ExceptionWrappingError(
-                HttpStatus.FORBIDDEN.name(),
                 HttpServletResponse.SC_FORBIDDEN,
+                NOT_ALLOWED,
                 errMsg,
                 request.getRequestURI()
         );
+
         response.setStatus(error.getStatus());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         OutputStream out = response.getOutputStream();

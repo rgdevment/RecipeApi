@@ -34,8 +34,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         String fullPath = getFullPath(request);
 
         ExceptionWrappingError error = new ExceptionWrappingError(
-                exception.getClass().getSimpleName(),
                 exception.getStatusCode().value(),
+                exception.getInternalCode(),
                 exception.getReason(),
                 fullPath
         );

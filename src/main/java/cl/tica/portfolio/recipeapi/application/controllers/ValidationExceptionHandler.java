@@ -24,8 +24,8 @@ public class ValidationExceptionHandler {
         String fullPath = getFullPath(request);
 
         ExceptionWrappingError error = new ExceptionWrappingError(
-                exception.getClass().getSimpleName(),
                 exception.getStatusCode().value(),
+                exception.getClass().getSimpleName(),
                 exception.getBody().getDetail(),
                 fullPath,
                 errors
