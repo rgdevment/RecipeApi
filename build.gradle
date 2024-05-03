@@ -104,4 +104,4 @@ sonar {
     }
 }
 
-check.dependsOn checkstyleMain, checkstyleTest, jacocoTestCoverageVerification
+check.dependsOn checkstyleMain, checkstyleTest, jacocoTestReport, jacocoTestCoverageVerification

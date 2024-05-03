@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,7 +31,7 @@ class AuthRepositoryIT {
         assertEquals("rgdevment@linkedin.com", optionalUser.get().getEmail());
         assertNotNull(optionalUser.get().getPassword());
         assertNotNull(optionalUser.get().getRoles());
-        assertNull(optionalUser.get().getUserData());
+        assertNotNull(optionalUser.get().getUserData());
         assertInstanceOf(LocalDateTime.class, optionalUser.get().getCreatedAt());
         assertInstanceOf(LocalDateTime.class, optionalUser.get().getUpdatedAt());
     }
