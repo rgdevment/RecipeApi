@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.recipe.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,7 @@ public class UnitMeasure {
     private Long id;
 
     @NotBlank
-    @Size(min = 1, max = 20)
+    @Size(min = 3, max = 20)
+    @Column(unique = true, nullable = false)
     private String name;
 }

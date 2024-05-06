@@ -4,6 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.recipe.enums.Difficulty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,13 +23,15 @@ import java.util.List;
 public class Recipe extends RecipeBase {
     @NotBlank
     @Size(min = 3, max = 100)
+    @Column(nullable = false)
     private String title;
 
     @NotBlank
     @Size(min = 20, max = 1000)
+    @Column(nullable = false)
     private String preparation;
 
-    @NotBlank
+    @NotNull
     @Schema(description = "The time it takes to prepare the recipe, in minutes.")
     private Integer cookingTime;
 
@@ -59,9 +62,8 @@ public class Recipe extends RecipeBase {
     @ElementCollection
     private List<String> pairings;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User author;
 
     @NotEmpty

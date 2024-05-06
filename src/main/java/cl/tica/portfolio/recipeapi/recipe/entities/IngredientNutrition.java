@@ -14,13 +14,11 @@ public class IngredientNutrition extends RecipeBase {
     @NotNull
     private double defaultQuantity;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "unit_measure_id")
+    @JoinColumn(name = "unit_measure_id", referencedColumnName = "id")
     private UnitMeasure unitMeasure;
 
-    @NotNull
     @OneToOne
-    @JoinColumn(name = "ingredient_id")
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private Ingredient ingredient;
 }

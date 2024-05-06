@@ -10,17 +10,16 @@ public class RecipeIngredient extends RecipeBase {
     @NotNull
     private double quantity;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "unit_measure_id")
+    @JoinColumn(name = "unit_measure_id", referencedColumnName = "id")
     private UnitMeasure unitMeasure;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "ingredient_id")
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private Ingredient ingredient;
 
 }

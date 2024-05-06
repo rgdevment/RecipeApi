@@ -15,13 +15,11 @@ public class RecipeRating extends RecipeBase {
     @Size(min = 10, max = 255)
     private String comment;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "recipe_id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User author;
 }
