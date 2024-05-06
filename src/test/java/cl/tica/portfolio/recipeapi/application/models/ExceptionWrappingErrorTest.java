@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.application.models;
 
-import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
+import cl.tica.portfolio.recipeapi.application.dto.ValidationFieldsError;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

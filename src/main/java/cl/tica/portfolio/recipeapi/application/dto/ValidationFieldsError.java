@@ -1,4 +1,4 @@
-package cl.tica.portfolio.recipeapi.auth.security.dto;
+package cl.tica.portfolio.recipeapi.application.dto;
 
 public record ValidationFieldsError(String field, String type, String message) {
 }
