@@ -10,8 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users_additional_data")
@@ -25,11 +26,13 @@ public class UserAdditionalData {
     @JsonBackReference
     private User user;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 3, max = 30)
     @Column(nullable = false)
     private String name;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 3, max = 30)
     @Column(nullable = false)
     private String lastname;
 
@@ -48,11 +51,11 @@ public class UserAdditionalData {
         return user;
     }
 
-    public @NotEmpty String getName() {
+    public @NotBlank String getName() {
         return name;
     }
 
-    public @NotEmpty String getLastname() {
+    public @NotBlank String getLastname() {
         return lastname;
     }
 
@@ -64,11 +67,11 @@ public class UserAdditionalData {
         this.gender = gender;
     }
 
-    public void setLastname(@NotEmpty String lastname) {
+    public void setLastname(@NotBlank String lastname) {
         this.lastname = lastname;
     }
 
-    public void setName(@NotEmpty String name) {
+    public void setName(@NotBlank String name) {
         this.name = name;
     }
 }
