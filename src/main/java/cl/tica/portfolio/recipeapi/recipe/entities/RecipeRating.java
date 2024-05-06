@@ -4,10 +4,12 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "recipe_ratings")
 public class RecipeRating extends RecipeBase {
     @NotNull
     private Integer rating;
