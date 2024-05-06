@@ -19,6 +19,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -37,12 +38,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty
-    @Size(max = 30)
+    @NotBlank
+    @Size(min = 3, max = 30)
     @Column(nullable = false, unique = true)
     private String username;
 
-    @NotEmpty
+    @NotBlank
     @Size(max = 50)
     @Email
     @Column(nullable = false, unique = true)
