@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.application.models;
 
-import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
+import cl.tica.portfolio.recipeapi.application.dto.ValidationFieldsError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

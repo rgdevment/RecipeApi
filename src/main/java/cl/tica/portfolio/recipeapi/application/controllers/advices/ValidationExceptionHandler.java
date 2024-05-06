@@ -1,6 +1,6 @@
 package cl.tica.portfolio.recipeapi.application.controllers.advices;
 
-import cl.tica.portfolio.recipeapi.auth.security.dto.ValidationFieldsError;
+import cl.tica.portfolio.recipeapi.application.dto.ValidationFieldsError;
 import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

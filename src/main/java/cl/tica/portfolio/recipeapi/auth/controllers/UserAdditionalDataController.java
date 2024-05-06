@@ -37,7 +37,7 @@ public class UserAdditionalDataController {
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
     @PutMapping("/additional-data")
-    public ResponseEntity<UpdatedUserResponse> addUserAdditionalData(@Valid @RequestBody AdditionalDataRequest request) {
+    public ResponseEntity<UpdatedUserResponse> updateUserAdditionalData(@Valid @RequestBody AdditionalDataRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         User user = userAdditionalDataService.findUserByUsername(auth.getName());
