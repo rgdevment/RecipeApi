@@ -4,6 +4,8 @@ import cl.tica.portfolio.recipeapi.auth.enums.GenderType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,6 +42,7 @@ public class UserAdditionalData {
 
     @NotNull
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private GenderType gender;
 
     public UserAdditionalData() {
