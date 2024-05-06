@@ -21,6 +21,4 @@ public class UserLike {
     @ManyToOne
     @JoinColumn(name = "comment_id", referencedColumnName = "id")
     private RecipeComment recipeComment;
-
-    // getters y setters...
 }
