@@ -14,8 +14,8 @@ public class RecipeComment extends RecipeBase {
 
     private Integer likes = 0;
     private Boolean isVisible = Boolean.TRUE;
-    private Boolean isDeleted = Boolean.FALSE;;
-    private Boolean isEdited = Boolean.FALSE;;
+    private Boolean isDeleted = Boolean.FALSE;
+    private Boolean isEdited = Boolean.FALSE;
     private Boolean isReply = Boolean.FALSE;
 
     @ManyToOne
