@@ -10,8 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = &quot;users_additional_data&quot;)
@@ -25,11 +26,13 @@ public class UserAdditionalData {
     @JsonBackReference
     private User user;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 3, max = 30)
     @Column(nullable = false)
     private String name;
 
-    @NotEmpty
+    @NotBlank
+    @Size(min = 3, max = 30)
     @Column(nullable = false)
     private String lastname;
 
@@ -37,39 +40,39 @@ public class UserAdditionalData {
     @Column(nullable = false)
     private GenderType gender;
 
-<span class="fc" id="L40">    public UserAdditionalData() {</span>
-<span class="fc" id="L41">    }</span>
+<span class="fc" id="L43">    public UserAdditionalData() {</span>
+<span class="fc" id="L44">    }</span>
 
-<span class="fc" id="L43">    public UserAdditionalData(User user) {</span>
-<span class="fc" id="L44">        this.user = user;</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L46">    public UserAdditionalData(User user) {</span>
+<span class="fc" id="L47">        this.user = user;</span>
+<span class="fc" id="L48">    }</span>
 
     public User getUser() {
-<span class="fc" id="L48">        return user;</span>
+<span class="fc" id="L51">        return user;</span>
     }
 
-    public @NotEmpty String getName() {
-<span class="fc" id="L52">        return name;</span>
+    public @NotBlank String getName() {
+<span class="fc" id="L55">        return name;</span>
     }
 
-    public @NotEmpty String getLastname() {
-<span class="fc" id="L56">        return lastname;</span>
+    public @NotBlank String getLastname() {
+<span class="fc" id="L59">        return lastname;</span>
     }
 
     public GenderType getGender() {
-<span class="fc" id="L60">        return gender;</span>
+<span class="fc" id="L63">        return gender;</span>
     }
 
     public void setGender(GenderType gender) {
-<span class="fc" id="L64">        this.gender = gender;</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L67">        this.gender = gender;</span>
+<span class="fc" id="L68">    }</span>
 
-    public void setLastname(@NotEmpty String lastname) {
-<span class="fc" id="L68">        this.lastname = lastname;</span>
-<span class="fc" id="L69">    }</span>
+    public void setLastname(@NotBlank String lastname) {
+<span class="fc" id="L71">        this.lastname = lastname;</span>
+<span class="fc" id="L72">    }</span>
 
-    public void setName(@NotEmpty String name) {
-<span class="fc" id="L72">        this.name = name;</span>
-<span class="fc" id="L73">    }</span>
+    public void setName(@NotBlank String name) {
+<span class="fc" id="L75">        this.name = name;</span>
+<span class="fc" id="L76">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
