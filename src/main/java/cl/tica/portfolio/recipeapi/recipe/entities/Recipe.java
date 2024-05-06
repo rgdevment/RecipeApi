@@ -9,10 +9,14 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,6 +30,11 @@ import java.util.List;
         @Index(name = "idx_difficulty", columnList = "difficulty")
 })
 public class Recipe extends RecipeBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipes_seq")
+    @SequenceGenerator(name = "recipes_seq", allocationSize = 1)
+    private Long id;
+
     @NotBlank
     @Size(min = 3, max = 100)
     @Column(nullable = false)
@@ -80,4 +89,24 @@ public class Recipe extends RecipeBase {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<RecipeRating> ratings;
+
+    public Recipe() {
+    }
+
+    public Recipe(String title,
+                  String preparation,
+                  Integer cookingTime,
+                  Integer servingSize,
+                  String originVersion,
+                  Difficulty difficulty,
+                  User author
+    ) {
+        this.title = title;
+        this.preparation = preparation;
+        this.cookingTime = cookingTime;
+        this.servingSize = servingSize;
+        this.originVersion = originVersion;
+        this.difficulty = difficulty;
+        this.author = author;
+    }
 }

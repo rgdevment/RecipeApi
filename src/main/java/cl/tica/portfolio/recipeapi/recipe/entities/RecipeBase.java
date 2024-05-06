@@ -1,9 +1,6 @@
 package cl.tica.portfolio.recipeapi.recipe.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -14,10 +11,6 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class RecipeBase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
