@@ -9,16 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "users_additional_data")
+@Table(name = "user_additional_data")
 public class UserAdditionalData {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_additional_data_seq")
+    @SequenceGenerator(name = "user_additional_data_seq", allocationSize = 1)
     private Long id;
 
     @OneToOne

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -22,7 +23,8 @@ import java.util.UUID;
 @Table(name = "users_verification_token")
 public class UserVerificationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_verification_token_seq")
+    @SequenceGenerator(name = "users_verification_token_seq", allocationSize = 1)
     private Long id;
 
     @NotBlank
