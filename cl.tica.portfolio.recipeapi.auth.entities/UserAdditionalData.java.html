@@ -9,16 +9,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = &quot;users_additional_data&quot;)
+@Table(name = &quot;user_additional_data&quot;)
 public class UserAdditionalData {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &quot;user_additional_data_seq&quot;)
+    @SequenceGenerator(name = &quot;user_additional_data_seq&quot;, allocationSize = 1)
     private Long id;
 
     @OneToOne
@@ -40,39 +42,39 @@ public class UserAdditionalData {
     @Column(nullable = false)
     private GenderType gender;
 
-<span class="fc" id="L43">    public UserAdditionalData() {</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L45">    public UserAdditionalData() {</span>
+<span class="fc" id="L46">    }</span>
 
-<span class="fc" id="L46">    public UserAdditionalData(User user) {</span>
-<span class="fc" id="L47">        this.user = user;</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L48">    public UserAdditionalData(User user) {</span>
+<span class="fc" id="L49">        this.user = user;</span>
+<span class="fc" id="L50">    }</span>
 
     public User getUser() {
-<span class="fc" id="L51">        return user;</span>
+<span class="fc" id="L53">        return user;</span>
     }
 
     public @NotBlank String getName() {
-<span class="fc" id="L55">        return name;</span>
+<span class="fc" id="L57">        return name;</span>
     }
 
     public @NotBlank String getLastname() {
-<span class="fc" id="L59">        return lastname;</span>
+<span class="fc" id="L61">        return lastname;</span>
     }
 
     public GenderType getGender() {
-<span class="fc" id="L63">        return gender;</span>
+<span class="fc" id="L65">        return gender;</span>
     }
 
     public void setGender(GenderType gender) {
-<span class="fc" id="L67">        this.gender = gender;</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L69">        this.gender = gender;</span>
+<span class="fc" id="L70">    }</span>
 
     public void setLastname(@NotBlank String lastname) {
-<span class="fc" id="L71">        this.lastname = lastname;</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L73">        this.lastname = lastname;</span>
+<span class="fc" id="L74">    }</span>
 
     public void setName(@NotBlank String name) {
-<span class="fc" id="L75">        this.name = name;</span>
-<span class="fc" id="L76">    }</span>
+<span class="fc" id="L77">        this.name = name;</span>
+<span class="fc" id="L78">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
