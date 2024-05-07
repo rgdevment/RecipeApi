@@ -90,23 +90,35 @@ public class Recipe extends RecipeBase {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<RecipeRating> ratings;
 
-    public Recipe() {
+    public Long getId() {
+        return id;
     }
 
-    public Recipe(String title,
-                  String preparation,
-                  Integer cookingTime,
-                  Integer servingSize,
-                  String originVersion,
-                  Difficulty difficulty,
-                  User author
-    ) {
-        this.title = title;
-        this.preparation = preparation;
-        this.cookingTime = cookingTime;
-        this.servingSize = servingSize;
-        this.originVersion = originVersion;
-        this.difficulty = difficulty;
-        this.author = author;
+    public @NotBlank @Size(min = 3, max = 100) String getTitle() {
+        return title;
+    }
+
+    public @NotBlank @Size(min = 20, max = 1000) String getPreparation() {
+        return preparation;
+    }
+
+    public @NotNull Integer getCookingTime() {
+        return cookingTime;
+    }
+
+    public @NotNull Integer getServingSize() {
+        return servingSize;
+    }
+
+    public @NotBlank @Size(min = 3, max = 100) String getOriginVersion() {
+        return originVersion;
+    }
+
+    public @NotNull Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public @NotEmpty List<RecipeIngredient> getIngredients() {
+        return ingredients;
     }
 }

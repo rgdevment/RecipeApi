@@ -25,7 +25,7 @@ INSERT INTO ingredients (id, name, created_at, updated_at) VALUES(nextval('ingre
 INSERT INTO units_measures (id, name) VALUES(nextval('units_measures_seq'), 'Grams'), (nextval('units_measures_seq'), 'Cups'), (nextval('units_measures_seq'), 'Pieces');
 
 -- Recipes
-INSERT INTO recipes (id, title, preparation, cooking_time, serving_size, origin_version, difficulty, user_id, created_at, updated_at) VALUES(nextval('recipes_seq'), 'Paella de mariscos', 'Preparación de la paella...', 60, 4, 'España', 'BEGINNER', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (nextval('recipes_seq'), 'Tacos de Pescado y Mariscos', 'Preparación de los tacos...', 30, 2, 'México', 'BASIC', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO recipes (id, title, preparation, cooking_time, serving_size, origin_version, difficulty, user_id, created_at, updated_at) VALUES(nextval('recipes_seq'), 'Chupe de marisco', 'Preparación del chupe...', 60, 4, 'Chile', 'BEGINNER', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (nextval('recipes_seq'), 'Tacos de Pescado y Mariscos', 'Preparación de los tacos...', 30, 2, 'México', 'BASIC', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Recipes Ingredients
 INSERT INTO recipe_ingredients (id, recipe_id, ingredient_id, quantity, unit_measure_id, created_at, updated_at) VALUES(nextval('recipe_ingredients_seq'), 1, 1, 200, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (nextval('recipe_ingredients_seq'), 1, 2, 100, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (nextval('recipe_ingredients_seq'), 2, 3, 2, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (nextval('recipe_ingredients_seq'), 2, 4, 2, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

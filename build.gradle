@@ -38,6 +38,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:postgresql'
     testImplementation 'net.datafaker:datafaker:2.2.2'
     runtimeOnly 'com.h2database:h2'
 }
