@@ -16,11 +16,11 @@ import java.util.List;
  *     The indexes are not created automatically by Spring Data JPA.
  */
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    @Query(value = "SELECT * FROM recipes WHERE to_tsvector('english', title) @@ plainto_tsquery('english', :title) "
-            + "ORDER BY ts_rank(to_tsvector('english', title), plainto_tsquery('english', :title)) DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM recipes WHERE to_tsvector('english', title) @@ websearch_to_tsquery('english', :title) "
+            + "ORDER BY ts_rank(to_tsvector('english', title), websearch_to_tsquery('english', :title)) DESC", nativeQuery = true)
     List<Recipe> findTitleByRelevanceInEnglish(String title);
 
-    @Query(value = "SELECT * FROM recipes WHERE to_tsvector('spanish', title) @@ plainto_tsquery('spanish', :title) "
-            + "ORDER BY ts_rank(to_tsvector('spanish', title), plainto_tsquery('spanish', :title)) DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM recipes WHERE to_tsvector('spanish', title) @@ websearch_to_tsquery('spanish', :title) "
+            + "ORDER BY ts_rank(to_tsvector('spanish', title), websearch_to_tsquery('spanish', :title)) DESC", nativeQuery = true)
     List<Recipe> findTitleByRelevanceInSpanish(String title);
 }
