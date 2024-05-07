@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Recipe.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RecipeApi</a> &gt; <a href="index.source.html" class="el_package">cl.tica.portfolio.recipeapi.recipe.entities</a> &gt; <span class="el_source">Recipe.java</span></div><h1>Recipe.java</h1><pre class="source lang-java linenums">package cl.tica.portfolio.recipeapi.recipe.entities;
+
+import cl.tica.portfolio.recipeapi.auth.entities.User;
+import cl.tica.portfolio.recipeapi.recipe.enums.Difficulty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
+
+@Entity
+@Table(name = &quot;recipes&quot;, indexes = {
+        @Index(name = &quot;idx_difficulty&quot;, columnList = &quot;difficulty&quot;)
+})
+<span class="fc" id="L32">public class Recipe extends RecipeBase {</span>
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &quot;recipes_seq&quot;)
+    @SequenceGenerator(name = &quot;recipes_seq&quot;, allocationSize = 1)
+    private Long id;
+
+    @NotBlank
+    @Size(min = 3, max = 100)
+    @Column(nullable = false)
+    private String title;
+
+    @NotBlank
+    @Size(min = 20, max = 1000)
+    @Column(nullable = false)
+    private String preparation;
+
+    @NotNull
+    @Schema(description = &quot;The time it takes to prepare the recipe, in minutes.&quot;)
+    private Integer cookingTime;
+
+    @NotNull
+    @Schema(description = &quot;The number of servings the recipe makes.&quot;)
+    private Integer servingSize;
+
+    @NotBlank
+    @Size(min = 3, max = 100)
+    @Schema(description = &quot;Origin or regional adaptation of this recipe.&quot;)
+    private String originVersion;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Difficulty difficulty;
+
+    @ElementCollection
+    private List&lt;String&gt; images;
+
+    @ElementCollection
+    private List&lt;String&gt; tags;
+
+    @NotEmpty
+    @ElementCollection
+    private List&lt;String&gt; categories;
+
+    @Schema(description = &quot;Ideal accompaniment for the recipe, drinks, snacks, etc..&quot;)
+    @ElementCollection
+    private List&lt;String&gt; pairings;
+
+    @ManyToOne
+    @JoinColumn(name = &quot;user_id&quot;, referencedColumnName = &quot;id&quot;)
+    private User author;
+
+    @NotEmpty
+    @OneToMany(mappedBy = &quot;recipe&quot;, cascade = CascadeType.ALL)
+    private List&lt;RecipeIngredient&gt; ingredients;
+
+    @OneToMany(mappedBy = &quot;recipe&quot;, cascade = CascadeType.ALL)
+    private List&lt;RecipeComment&gt; comments;
+
+    @OneToMany(mappedBy = &quot;recipe&quot;, cascade = CascadeType.ALL)
+    private List&lt;RecipeRating&gt; ratings;
+
+    public Long getId() {
+<span class="fc" id="L94">        return id;</span>
+    }
+
+    public @NotBlank @Size(min = 3, max = 100) String getTitle() {
+<span class="fc" id="L98">        return title;</span>
+    }
+
+    public @NotBlank @Size(min = 20, max = 1000) String getPreparation() {
+<span class="fc" id="L102">        return preparation;</span>
+    }
+
+    public @NotNull Integer getCookingTime() {
+<span class="fc" id="L106">        return cookingTime;</span>
+    }
+
+    public @NotNull Integer getServingSize() {
+<span class="fc" id="L110">        return servingSize;</span>
+    }
+
+    public @NotBlank @Size(min = 3, max = 100) String getOriginVersion() {
+<span class="fc" id="L114">        return originVersion;</span>
+    }
+
+    public @NotNull Difficulty getDifficulty() {
+<span class="fc" id="L118">        return difficulty;</span>
+    }
+
+    public @NotEmpty List&lt;RecipeIngredient&gt; getIngredients() {
+<span class="fc" id="L122">        return ingredients;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

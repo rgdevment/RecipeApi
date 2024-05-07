@@ -4,6 +4,8 @@ import cl.tica.portfolio.recipeapi.auth.enums.GenderType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,41 +42,42 @@ public class UserAdditionalData {
 
     @NotNull
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private GenderType gender;
 
-<span class="fc" id="L45">    public UserAdditionalData() {</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L48">    public UserAdditionalData() {</span>
+<span class="fc" id="L49">    }</span>
 
-<span class="fc" id="L48">    public UserAdditionalData(User user) {</span>
-<span class="fc" id="L49">        this.user = user;</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L51">    public UserAdditionalData(User user) {</span>
+<span class="fc" id="L52">        this.user = user;</span>
+<span class="fc" id="L53">    }</span>
 
     public User getUser() {
-<span class="fc" id="L53">        return user;</span>
+<span class="fc" id="L56">        return user;</span>
     }
 
     public @NotBlank String getName() {
-<span class="fc" id="L57">        return name;</span>
+<span class="fc" id="L60">        return name;</span>
     }
 
     public @NotBlank String getLastname() {
-<span class="fc" id="L61">        return lastname;</span>
+<span class="fc" id="L64">        return lastname;</span>
     }
 
     public GenderType getGender() {
-<span class="fc" id="L65">        return gender;</span>
+<span class="fc" id="L68">        return gender;</span>
     }
 
     public void setGender(GenderType gender) {
-<span class="fc" id="L69">        this.gender = gender;</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L72">        this.gender = gender;</span>
+<span class="fc" id="L73">    }</span>
 
     public void setLastname(@NotBlank String lastname) {
-<span class="fc" id="L73">        this.lastname = lastname;</span>
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L76">        this.lastname = lastname;</span>
+<span class="fc" id="L77">    }</span>
 
     public void setName(@NotBlank String name) {
-<span class="fc" id="L77">        this.name = name;</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L80">        this.name = name;</span>
+<span class="fc" id="L81">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
