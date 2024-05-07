@@ -20,14 +20,14 @@ class RecipeRepositoryTest {
     private RecipeRepository repository;
 
     @Test
-    void findTitleByRelevanceInEnglish() {
-        List<Recipe> recipes = repository.findTitleByRelevanceInEnglish("marisco");
+    void findTitleByRelevanceInSpanish() {
+        List<Recipe> recipes = repository.findTitleByRelevanceInSpanish("cualquiera or marisco");
         assertNotNull(recipes);
         assertEquals(2, recipes.size());
         Recipe recipe = recipes.getFirst();
         assertEquals(1, recipe.getId());
-        assertEquals("Chupe de marisco", recipe.getTitle());
-        assertEquals("Preparación del chupe...", recipe.getPreparation());
+        assertEquals("Chupe de marisco al estilo puerto de Antofagasta", recipe.getTitle());
+        assertEquals("Preparación del chupe en Antofagasta...", recipe.getPreparation());
         assertNotNull(recipe.getIngredients());
         assertEquals(60, recipe.getCookingTime());
         assertEquals(4, recipe.getServingSize());
@@ -36,6 +36,18 @@ class RecipeRepositoryTest {
     }
 
     @Test
-    void findTitleByRelevanceInSpanish() {
+    void findTitleByRelevanceInEnglish() {
+        List<Recipe> recipes = repository.findTitleByRelevanceInEnglish("Anything or Chips");
+        assertNotNull(recipes);
+        assertEquals(2, recipes.size());
+        Recipe recipe = recipes.getFirst();
+        assertEquals(5, recipe.getId());
+        assertEquals("Fish and Chips", recipe.getTitle());
+        assertEquals("Preparation of Fish and Chips...", recipe.getPreparation());
+        assertNotNull(recipe.getIngredients());
+        assertEquals(45, recipe.getCookingTime());
+        assertEquals(2, recipe.getServingSize());
+        assertEquals("England", recipe.getOriginVersion());
+        assertEquals("INTERMEDIATE", recipe.getDifficulty().name());
     }
 }
