@@ -29,4 +29,12 @@ public abstract class RecipeBase {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }
