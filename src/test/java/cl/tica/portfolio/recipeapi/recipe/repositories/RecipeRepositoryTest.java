@@ -1,21 +1,15 @@
 package cl.tica.portfolio.recipeapi.recipe.repositories;
 
+import cl.tica.portfolio.recipeapi.PostgresTestBase;
 import cl.tica.portfolio.recipeapi.recipe.entities.Recipe;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest
-@ActiveProfiles("postgres")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class RecipeRepositoryTest {
+class RecipeRepositoryTest extends PostgresTestBase {
     @Autowired
     private RecipeRepository repository;
 
