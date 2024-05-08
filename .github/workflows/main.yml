@@ -1,9 +1,9 @@
 name: Build CI
 on:
   push:
-    branches:
-      - main
-  pull_request: ~
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-deploy:
@@ -44,5 +44,5 @@ jobs:
       - name: Publish coverage report to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           folder: build/reports/jacoco/test/html
