@@ -117,4 +117,8 @@ sonar {
     }
 }
 
+project.tasks.named("sonar").configure {
+    dependsOn "checkstyleMain", "checkstyleTest", "jacocoTestCoverageVerification"
+}
+
 check.dependsOn checkstyleMain, checkstyleTest, jacocoTestReport, jacocoTestCoverageVerification
