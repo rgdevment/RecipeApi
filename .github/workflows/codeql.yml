@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - language: [ 'java' ]
+          - language: 'java'
             build-mode: autobuild
     steps:
       - name: Checkout repository
