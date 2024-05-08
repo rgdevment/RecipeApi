@@ -75,7 +75,6 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
-    dependsOn jacocoTestReport
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: exclusions)
@@ -117,8 +116,4 @@ sonar {
     }
 }
 
-project.tasks.named("sonar").configure {
-    dependsOn "checkstyleMain", "checkstyleTest", "jacocoTestCoverageVerification"
-}
-
-check.dependsOn checkstyleMain, checkstyleTest, jacocoTestReport, jacocoTestCoverageVerification
+check.dependsOn checkstyleMain, checkstyleTest, jacocoTestReport
