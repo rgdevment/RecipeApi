@@ -25,6 +25,9 @@ jobs:
       - name: Check Styles Tests
         run: ./gradlew checkstyleTest
 
+      - name: Coverage Report
+        run: ./gradlew jacocoTestReport
+
       - name: Coverage Verification
         run: ./gradlew jacocoTestCoverageVerification
 
@@ -46,3 +49,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           folder: build/reports/jacoco/test/html
+
+      - name: Build and Analyze
+        run: ./gradlew clean build sonar --info
