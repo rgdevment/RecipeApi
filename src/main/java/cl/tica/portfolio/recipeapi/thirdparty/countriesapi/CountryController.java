@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.thirdparty.countriesapi;
 
+import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.response.CountryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -2,17 +2,17 @@ package cl.tica.portfolio.recipeapi.thirdparty.countriesapi;
 
 import java.util.Map;
 
-public class CountryResponse {
-    private String commonName;
+public class CountryApi {
+    private Map<String, String> commonName;
     private Map<String, String> flags;
 
     // Getters and setters
-    public String getCommonName() {
+    public Map<String, String> getCommonName() {
         return commonName;
     }
 
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
+    public void setName(Map<String, String> name) {
+        this.commonName = name;
     }
 
     public Map<String, String> getFlags() {

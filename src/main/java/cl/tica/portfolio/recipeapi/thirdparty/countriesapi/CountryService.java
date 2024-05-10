@@ -1,17 +1,21 @@
 package cl.tica.portfolio.recipeapi.thirdparty.countriesapi;
 
+import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.api.Country;
+import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.response.CountryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CountryService {
@@ -23,18 +27,26 @@ public class CountryService {
     public List<CountryResponse> getCountries() {
         try {
             RestTemplate restTemplate = new RestTemplate();
-            List<Map<String, Object>> response = restTemplate.getForObject(URL, List.class);
+            ResponseEntity<List<Country>> response = restTemplate.exchange(
+                    URL,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
 
-            List<CountryResponse> countries = new ArrayList<>();
-            for (Map<String, Object> country : response) {
-                CountryResponse countryResponse = new CountryResponse();
-                Map<String, Object> name = (Map<String, Object>) country.get("name");
-                countryResponse.setCommonName((String) name.get("common"));
-                countryResponse.setFlags((Map<String, String>) country.get("flags"));
-                countries.add(countryResponse);
+            List<Country> countries = response.getBody();
+            if (countries == null) {
+                logger.error("No countries retrieved from external API.");
+                throw new CountryException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
             }
 
-            return countries;
+            List<CountryResponse> countriesResponse = new ArrayList<>();
+            for (Country countryDTO : countries) {
+                CountryResponse countryResponse = new CountryResponse(countryDTO.name().common(), countryDTO.flags());
+                countriesResponse.add(countryResponse);
+            }
+
+            return countriesResponse;
         } catch (RestClientException exception) {
             logger.error("Error retrieving countries from external API.", exception);
             throw new CountryException(HttpStatus.BAD_GATEWAY, "Error retrieving countries from external API.");
