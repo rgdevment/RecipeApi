@@ -14,7 +14,8 @@ public class ConfirmationServiceJpa implements ConfirmationService {
     private final AuthRepository authRepository;
     private final UserConfirmationRepository userConfirmationRepository;
 
-    public ConfirmationServiceJpa(AuthRepository authRepository, UserConfirmationRepository userConfirmationRepository) {
+    public ConfirmationServiceJpa(AuthRepository authRepository,
+                                  UserConfirmationRepository userConfirmationRepository) {
         this.authRepository = authRepository;
         this.userConfirmationRepository = userConfirmationRepository;
     }

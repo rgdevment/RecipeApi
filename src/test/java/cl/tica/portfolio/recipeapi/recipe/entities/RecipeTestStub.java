@@ -7,12 +7,12 @@ import net.datafaker.Faker;
 
 class RecipeTestStub {
     public static void create(String title,
-                                String preparation,
-                                Integer cookingTime,
-                                Integer servingSize,
-                                String originVersion,
-                                Difficulty difficulty,
-                                User author) {
+                              String preparation,
+                              Integer cookingTime,
+                              Integer servingSize,
+                              String originVersion,
+                              Difficulty difficulty,
+                              User author) {
     }
 
     public static void random() {

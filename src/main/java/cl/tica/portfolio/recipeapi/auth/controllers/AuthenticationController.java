@@ -35,15 +35,18 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    public AuthenticationController(AuthenticationService service, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthenticationController(AuthenticationService service, AuthenticationManager authenticationManager,
+                                    JwtUtils jwtUtils) {
         this.service = service;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
     }
 
     @Operation(summary = "Register a new user.")
-    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisteredUserResponse.class)))
-    @ApiResponse(responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = RegisteredUserResponse.class)))
+    @ApiResponse(responseCode = "409", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = ExceptionWrappingError.class)))
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
     @PostMapping("/register")
     public ResponseEntity<RegisteredUserResponse> registerUser(@Valid @RequestBody SignupRequest request) {
@@ -56,8 +59,10 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Get token for registered user.")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvalidCredentialsException.class)))
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = TokenResponse.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = InvalidCredentialsException.class)))
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         try {

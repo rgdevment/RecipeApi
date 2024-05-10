@@ -54,7 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             Collection<GrantedAuthority> authorities = getAuthorities(claims);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(username, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
@@ -71,7 +72,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
     }
 
-    private void wrapAndHandleError(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
+    private void wrapAndHandleError(HttpServletRequest request, HttpServletResponse response,
+                                    Exception e) throws IOException {
         String errMsg = e instanceof SignatureException
                 ? "Invalid or expired token."
                 : e.getMessage();
