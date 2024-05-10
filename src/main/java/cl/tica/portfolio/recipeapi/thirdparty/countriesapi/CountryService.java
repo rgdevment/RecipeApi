@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class CountryService {
-    private static final Logger logger = LoggerFactory.getLogger(CountryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryService.class);
 
     private static final String URL = "https://restcountries.com/v3.1/all";
 
@@ -31,12 +31,13 @@ public class CountryService {
                     URL,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<>() {}
+                    new ParameterizedTypeReference<>() {
+                    }
             );
 
             List<Country> countries = response.getBody();
             if (countries == null) {
-                logger.error("No countries retrieved from external API.");
+                LOGGER.error("No countries retrieved from external API.");
                 throw new CountryException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
             }
 
@@ -48,7 +49,7 @@ public class CountryService {
 
             return countriesResponse;
         } catch (RestClientException exception) {
-            logger.error("Error retrieving countries from external API.", exception);
+            LOGGER.error("Error retrieving countries from external API.", exception);
             throw new CountryException(HttpStatus.BAD_GATEWAY, "Error retrieving countries from external API.");
         }
     }

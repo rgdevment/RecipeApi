@@ -16,4 +16,3 @@ public class CountryException extends ResponseStatusException implements ApiExce
         return INVALID_CONFIRMATION;
     }
 }
-

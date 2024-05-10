@@ -26,9 +26,14 @@ public class CountryController {
     }
 
     @Operation(summary = "Get a cacheable list of countries and regions for region adaptation on recipe.")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
-    @ApiResponse(responseCode = "502", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CountryException.class)))
-    @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
+    @ApiResponse(responseCode = "200",
+            content = @Content(mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
+    @ApiResponse(responseCode = "502",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = CountryException.class)))
+    @ApiResponse(responseCode = "401",
+            content = @Content(schema = @Schema()))
     @GetMapping
     public ResponseEntity<List<CountryResponse>> getCountries() {
         List<CountryResponse> countries = countryService.getCountries();
@@ -36,7 +41,9 @@ public class CountryController {
     }
 
     @Operation(summary = "Refresh the cache of countries and regions.")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
+    @ApiResponse(responseCode = "200", content =
+    @Content(mediaType = "application/json",
+            array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
     @PostMapping("/refresh")
     @PreAuthorize("hasRole('ADMIN')")
