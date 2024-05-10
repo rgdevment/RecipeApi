@@ -4,6 +4,7 @@ import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtAuthenticationEntryPoint
 import cl.tica.portfolio.recipeapi.auth.security.jwt.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -62,7 +63,8 @@ public class SecurityConfig {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.POST, "/v1/countries/refresh").hasRole("ADMIN")
+                        .anyRequest().hasRole("USER"))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)

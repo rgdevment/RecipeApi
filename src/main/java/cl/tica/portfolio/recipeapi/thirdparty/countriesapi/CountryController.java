@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Country Controller")
 @RestController
 @RequestMapping("/v1/countries")
 public class CountryController {
@@ -47,7 +49,8 @@ public class CountryController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema()))
     @PostMapping("/refresh")
     @PreAuthorize("hasRole('ADMIN')")
-    public void refreshCountries() {
+    public ResponseEntity<Void> refreshCountries() {
         countryService.refreshCountries();
+        return ResponseEntity.ok().build();
     }
 }

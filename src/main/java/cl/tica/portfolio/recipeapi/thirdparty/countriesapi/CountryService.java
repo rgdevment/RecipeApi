@@ -11,10 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,33 +23,24 @@ public class CountryService {
 
     @Cacheable("countries")
     public List<CountryResponse> getCountries() {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<List<Country>> response = restTemplate.exchange(
-                    URL,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {
-                    }
-            );
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<Country>> response = restTemplate.exchange(
+                URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
 
-            List<Country> countries = response.getBody();
-            if (countries == null) {
-                LOGGER.error("No countries retrieved from external API.");
-                throw new CountryException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
-            }
-
-            List<CountryResponse> countriesResponse = new ArrayList<>();
-            for (Country countryDTO : countries) {
-                CountryResponse countryResponse = new CountryResponse(countryDTO.name().common(), countryDTO.flags());
-                countriesResponse.add(countryResponse);
-            }
-
-            return countriesResponse;
-        } catch (RestClientException exception) {
-            LOGGER.error("Error retrieving countries from external API.", exception);
-            throw new CountryException(HttpStatus.BAD_GATEWAY, "Error retrieving countries from external API.");
+        List<Country> countries = response.getBody();
+        if (countries == null) {
+            LOGGER.error("No countries retrieved from external API.");
+            throw new CountryException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
         }
+
+        return countries.stream()
+                .map(country -> new CountryResponse(country.name().common(), country.flags()))
+                .toList();
     }
 
     @CacheEvict(value = "countries", allEntries = true)
