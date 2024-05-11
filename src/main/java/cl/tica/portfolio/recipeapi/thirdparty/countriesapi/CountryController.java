@@ -1,6 +1,7 @@
 package cl.tica.portfolio.recipeapi.thirdparty.countriesapi;
 
 import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.response.CountryResponse;
+import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.exceptions.CountryRequestException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +34,7 @@ public class CountryController {
                     array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
     @ApiResponse(responseCode = "502",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CountryException.class)))
+                    schema = @Schema(implementation = CountryRequestException.class)))
     @ApiResponse(responseCode = "401",
             content = @Content(schema = @Schema()))
     @GetMapping

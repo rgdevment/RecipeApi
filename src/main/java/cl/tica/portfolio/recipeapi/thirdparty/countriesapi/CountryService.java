@@ -2,6 +2,7 @@ package cl.tica.portfolio.recipeapi.thirdparty.countriesapi;
 
 import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.api.Country;
 import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.dto.response.CountryResponse;
+import cl.tica.portfolio.recipeapi.thirdparty.countriesapi.exceptions.CountryRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,13 +20,18 @@ import java.util.List;
 public class CountryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountryService.class);
 
-    private static final String URL = "https://restcountries.com/v3.1/all";
+    private static final String URL_COUNTRY_API = "https://restcountries.com/v3.1/all";
+
+    private final RestTemplate restTemplate;
+
+    public CountryService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Cacheable("countries")
     public List<CountryResponse> getCountries() {
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List<Country>> response = restTemplate.exchange(
-                URL,
+                URL_COUNTRY_API,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {
@@ -35,7 +41,7 @@ public class CountryService {
         List<Country> countries = response.getBody();
         if (countries == null) {
             LOGGER.error("No countries retrieved from external API.");
-            throw new CountryException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
+            throw new CountryRequestException(HttpStatus.BAD_GATEWAY, "No countries retrieved from external API.");
         }
 
         return countries.stream()

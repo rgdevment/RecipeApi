@@ -52,4 +52,13 @@ class CountryControllerTest {
 
         verify(service, times(1)).getCountries();
     }
+
+    @Test
+    @WithMockUser(username = "@rgdevment", roles = {"ADMIN"})
+    void refreshCountryListCache() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/countries/refresh"))
+                .andExpect(status().isOk());
+
+        verify(service, times(1)).refreshCountries();
+    }
 }
