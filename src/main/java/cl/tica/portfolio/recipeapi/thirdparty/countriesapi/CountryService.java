@@ -39,7 +39,7 @@ public class CountryService {
         }
 
         return countries.stream()
-                .map(country -> new CountryResponse(country.name().common(), country.flags()))
+                .map(country -> new CountryResponse(country.name().common(), country.flags().png()))
                 .toList();
     }
 

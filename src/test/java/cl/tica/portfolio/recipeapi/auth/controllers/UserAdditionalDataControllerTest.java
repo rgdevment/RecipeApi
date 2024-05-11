@@ -46,14 +46,14 @@ class UserAdditionalDataControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user_enabled")
+    @WithMockUser(username = "@rgdevment")
     void addUserAdditionalData() throws Exception {
         Faker faker = new Faker();
         String name = faker.name().firstName();
         String lastname = faker.name().lastName();
         GenderType other = GenderType.OTHER;
 
-        User user = UserTestStub.create("user_enabled", "", "");
+        User user = UserTestStub.create("@rgdevment", "", "");
         UserAdditionalData userAdditionalData = user.getUserData();
         userAdditionalData.setName(name);
         userAdditionalData.setLastname(lastname);
