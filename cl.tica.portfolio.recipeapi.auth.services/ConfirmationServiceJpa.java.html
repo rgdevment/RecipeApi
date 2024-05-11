@@ -14,43 +14,44 @@ public class ConfirmationServiceJpa implements ConfirmationService {
     private final AuthRepository authRepository;
     private final UserConfirmationRepository userConfirmationRepository;
 
-<span class="fc" id="L17">    public ConfirmationServiceJpa(AuthRepository authRepository, UserConfirmationRepository userConfirmationRepository) {</span>
-<span class="fc" id="L18">        this.authRepository = authRepository;</span>
-<span class="fc" id="L19">        this.userConfirmationRepository = userConfirmationRepository;</span>
-<span class="fc" id="L20">    }</span>
+    public ConfirmationServiceJpa(AuthRepository authRepository,
+<span class="fc" id="L18">                                  UserConfirmationRepository userConfirmationRepository) {</span>
+<span class="fc" id="L19">        this.authRepository = authRepository;</span>
+<span class="fc" id="L20">        this.userConfirmationRepository = userConfirmationRepository;</span>
+<span class="fc" id="L21">    }</span>
 
     @Override
     @Transactional()
     public boolean confirmEmail(String code) {
-<span class="fc" id="L25">        AtomicBoolean isConfirmed = new AtomicBoolean(false);</span>
+<span class="fc" id="L26">        AtomicBoolean isConfirmed = new AtomicBoolean(false);</span>
 
-<span class="fc" id="L27">        userConfirmationRepository.findUserConfirmationByCode(code)</span>
-<span class="fc" id="L28">                .ifPresent(token -&gt;</span>
-<span class="fc" id="L29">                        authRepository.findByUsernameIgnoreCase(token.getUser().getUsername())</span>
-<span class="fc" id="L30">                                .ifPresent(user -&gt; {</span>
-<span class="fc" id="L31">                                    activateUser(user);</span>
-<span class="fc" id="L32">                                    userConfirmationRepository.delete(token);</span>
-<span class="fc" id="L33">                                    isConfirmed.set(true);</span>
-<span class="fc" id="L34">                                }));</span>
+<span class="fc" id="L28">        userConfirmationRepository.findUserConfirmationByCode(code)</span>
+<span class="fc" id="L29">                .ifPresent(token -&gt;</span>
+<span class="fc" id="L30">                        authRepository.findByUsernameIgnoreCase(token.getUser().getUsername())</span>
+<span class="fc" id="L31">                                .ifPresent(user -&gt; {</span>
+<span class="fc" id="L32">                                    activateUser(user);</span>
+<span class="fc" id="L33">                                    userConfirmationRepository.delete(token);</span>
+<span class="fc" id="L34">                                    isConfirmed.set(true);</span>
+<span class="fc" id="L35">                                }));</span>
 
-<span class="fc" id="L36">        return isConfirmed.get();</span>
+<span class="fc" id="L37">        return isConfirmed.get();</span>
     }
 
     @Override
     @Transactional()
     public void generateVerificationToken(User user) {
-<span class="fc" id="L42">        UserVerificationToken userVerificationToken = new UserVerificationToken(user);</span>
-<span class="fc" id="L43">        userConfirmationRepository.save(userVerificationToken);</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L43">        UserVerificationToken userVerificationToken = new UserVerificationToken(user);</span>
+<span class="fc" id="L44">        userConfirmationRepository.save(userVerificationToken);</span>
+<span class="fc" id="L45">    }</span>
 
     private void activateUser(User user) {
-<span class="fc" id="L47">        user.setAccountEnabled(true);</span>
-<span class="fc" id="L48">        user.setEmailVerified(true);</span>
-<span class="fc" id="L49">        saveUser(user);</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L48">        user.setAccountEnabled(true);</span>
+<span class="fc" id="L49">        user.setEmailVerified(true);</span>
+<span class="fc" id="L50">        saveUser(user);</span>
+<span class="fc" id="L51">    }</span>
 
     private void saveUser(User user) {
-<span class="fc" id="L53">        authRepository.save(user);</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L54">        authRepository.save(user);</span>
+<span class="fc" id="L55">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -21,59 +21,60 @@ public class ExceptionWrappingError {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List&lt;ValidationFieldsError&gt; errors;
 
-<span class="fc" id="L24">    public ExceptionWrappingError(int status, String code, String details, String instance, List&lt;ValidationFieldsError&gt; errors) {</span>
-<span class="fc" id="L25">        this.timespan = LocalDateTime.now();</span>
-<span class="fc" id="L26">        this.status = status;</span>
-<span class="fc" id="L27">        this.code = code;</span>
-<span class="fc" id="L28">        this.details = details;</span>
-<span class="fc" id="L29">        this.instance = instance;</span>
-<span class="fc" id="L30">        this.errors = errors;</span>
-<span class="fc" id="L31">    }</span>
+    public ExceptionWrappingError(int status, String code, String details, String instance,
+<span class="fc" id="L25">                                  List&lt;ValidationFieldsError&gt; errors) {</span>
+<span class="fc" id="L26">        this.timespan = LocalDateTime.now();</span>
+<span class="fc" id="L27">        this.status = status;</span>
+<span class="fc" id="L28">        this.code = code;</span>
+<span class="fc" id="L29">        this.details = details;</span>
+<span class="fc" id="L30">        this.instance = instance;</span>
+<span class="fc" id="L31">        this.errors = errors;</span>
+<span class="fc" id="L32">    }</span>
 
     public ExceptionWrappingError(int status, String code, String details, String instance) {
-<span class="fc" id="L34">        this(status, code, details, instance, new ArrayList&lt;&gt;());</span>
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L35">        this(status, code, details, instance, new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L36">    }</span>
 
     public LocalDateTime getTimespan() {
-<span class="fc" id="L38">        return timespan;</span>
+<span class="fc" id="L39">        return timespan;</span>
     }
 
     public String getCode() {
-<span class="fc" id="L42">        return code;</span>
+<span class="fc" id="L43">        return code;</span>
     }
 
     public int getStatus() {
-<span class="fc" id="L46">        return status;</span>
+<span class="fc" id="L47">        return status;</span>
     }
 
     public String getDetails() {
-<span class="fc" id="L50">        return details;</span>
+<span class="fc" id="L51">        return details;</span>
     }
 
     public String getInstance() {
-<span class="fc" id="L54">        return instance;</span>
+<span class="fc" id="L55">        return instance;</span>
     }
 
     public List&lt;ValidationFieldsError&gt; getErrors() {
-<span class="fc" id="L58">        return errors;</span>
+<span class="fc" id="L59">        return errors;</span>
     }
 
     public String toJSONString() {
-<span class="fc" id="L62">        ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L63">        ObjectMapper mapper = new ObjectMapper();</span>
 
-<span class="fc" id="L64">        ObjectNode node = mapper.createObjectNode();</span>
-<span class="fc" id="L65">        node.put(&quot;timespan&quot;, getTimespan().toString());</span>
-<span class="fc" id="L66">        node.put(&quot;status&quot;, getStatus());</span>
-<span class="fc" id="L67">        node.put(&quot;code&quot;, getCode());</span>
-<span class="fc" id="L68">        node.put(&quot;details&quot;, getDetails());</span>
-<span class="fc" id="L69">        node.put(&quot;instance&quot;, getInstance());</span>
+<span class="fc" id="L65">        ObjectNode node = mapper.createObjectNode();</span>
+<span class="fc" id="L66">        node.put(&quot;timespan&quot;, getTimespan().toString());</span>
+<span class="fc" id="L67">        node.put(&quot;status&quot;, getStatus());</span>
+<span class="fc" id="L68">        node.put(&quot;code&quot;, getCode());</span>
+<span class="fc" id="L69">        node.put(&quot;details&quot;, getDetails());</span>
+<span class="fc" id="L70">        node.put(&quot;instance&quot;, getInstance());</span>
 
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!getErrors().isEmpty()) {</span>
-<span class="fc" id="L72">            ArrayNode errorsNode = mapper.valueToTree(getErrors());</span>
-<span class="fc" id="L73">            node.set(&quot;errors&quot;, errorsNode);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!getErrors().isEmpty()) {</span>
+<span class="fc" id="L73">            ArrayNode errorsNode = mapper.valueToTree(getErrors());</span>
+<span class="fc" id="L74">            node.set(&quot;errors&quot;, errorsNode);</span>
         }
 
-<span class="fc" id="L76">        return node.toString();</span>
+<span class="fc" id="L77">        return node.toString();</span>
     }
 
 }
