@@ -17,10 +17,12 @@ public class ValidationExceptionHandler {
     private static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ExceptionWrappingError> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, WebRequest request) {
+    public ResponseEntity<ExceptionWrappingError> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception, WebRequest request) {
         List<ValidationFieldsError> errors = exception.getFieldErrors().stream()
                 .map(fieldError ->
-                        new ValidationFieldsError(fieldError.getField(), fieldError.getCode(), fieldError.getDefaultMessage())
+                        new ValidationFieldsError(fieldError.getField(), fieldError.getCode(),
+                                fieldError.getDefaultMessage())
                 )
                 .toList();
 

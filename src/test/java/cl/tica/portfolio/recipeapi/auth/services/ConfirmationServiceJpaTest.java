@@ -51,8 +51,10 @@ class ConfirmationServiceJpaTest {
     @Test
     void confirmEmailTokenFoundUserNotPersistOrError() {
         UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
-        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
-        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.empty());
+        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(
+                Optional.of(userVerificationToken));
+        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(
+                Optional.empty());
 
         assertFalse(service.confirmEmail(userVerificationToken.getCode()));
 
@@ -63,8 +65,10 @@ class ConfirmationServiceJpaTest {
     @Test
     void confirmEmailSuccessfully() {
         UserVerificationToken userVerificationToken = UserVerificationTokenTestStub.random();
-        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(Optional.of(userVerificationToken));
-        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(Optional.of(userVerificationToken.getUser()));
+        when(userConfirmationRepository.findUserConfirmationByCode(userVerificationToken.getCode())).thenReturn(
+                Optional.of(userVerificationToken));
+        when(authRepository.findByUsernameIgnoreCase(userVerificationToken.getUser().getUsername())).thenReturn(
+                Optional.of(userVerificationToken.getUser()));
 
         assertTrue(service.confirmEmail(userVerificationToken.getCode()));
         assertTrue(userVerificationToken.getUser().isEmailVerified());

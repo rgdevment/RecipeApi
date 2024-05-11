@@ -83,7 +83,8 @@ class AuthControllerTest {
         Authentication authentication = mock(Authentication.class);
         authentication.setAuthenticated(true);
 
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(
+                authentication);
         when(jwtUtils.generateToken(authentication)).thenReturn("token");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")

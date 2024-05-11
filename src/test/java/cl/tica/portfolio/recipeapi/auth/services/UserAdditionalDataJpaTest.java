@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserAdditionalDataJpaTest {
+class UserAdditionalDataJpaTest {
     private AuthRepository authRepository;
     private UserAdditionalDataService service;
 

@@ -5,8 +5,8 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserTestStub;
 import cl.tica.portfolio.recipeapi.auth.events.OnRegistrationCompleteEvent;
 import cl.tica.portfolio.recipeapi.auth.exceptions.UserAlreadyExistException;
-import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import cl.tica.portfolio.recipeapi.auth.repositories.AuthRepository;
+import cl.tica.portfolio.recipeapi.auth.repositories.RoleRepository;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,7 +128,8 @@ class AuthServiceJpaTest {
 
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(true);
 
-        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () -> service.register(user));
+        UserAlreadyExistException exception =
+                assertThrows(UserAlreadyExistException.class, () -> service.register(user));
 
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         assertEquals("Username is already taken.", exception.getReason());
@@ -150,7 +151,8 @@ class AuthServiceJpaTest {
         when(authRepository.existsByUsername(user.getUsername())).thenReturn(false);
         when(authRepository.existsByEmail(user.getEmail())).thenReturn(true);
 
-        UserAlreadyExistException exception = assertThrows(UserAlreadyExistException.class, () -> service.register(user));
+        UserAlreadyExistException exception =
+                assertThrows(UserAlreadyExistException.class, () -> service.register(user));
 
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         assertEquals("The email is already registered.", exception.getReason());

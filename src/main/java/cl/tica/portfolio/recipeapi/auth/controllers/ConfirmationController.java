@@ -1,9 +1,9 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidConfirmationException;
 import cl.tica.portfolio.recipeapi.auth.services.ConfirmationService;
-import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,8 +27,10 @@ public class ConfirmationController {
     }
 
     @Operation(summary = "Confirm user and email.")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = UserConfirmationResponse.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = ExceptionWrappingError.class)))
     @GetMapping("/confirm-account/{code}")
     public ResponseEntity<UserConfirmationResponse> confirmUserAccount(@PathVariable String code) {
         boolean isSuccess = service.confirmEmail(code);
@@ -36,6 +38,7 @@ public class ConfirmationController {
             UserConfirmationResponse response = new UserConfirmationResponse("User and email verify successfully.");
             return ResponseEntity.ok(response);
         }
-        throw new InvalidConfirmationException(HttpStatus.UNAUTHORIZED, "Validation was not possible, the token or user is not valid.");
+        throw new InvalidConfirmationException(HttpStatus.UNAUTHORIZED,
+                "Validation was not possible, the token or user is not valid.");
     }
 }

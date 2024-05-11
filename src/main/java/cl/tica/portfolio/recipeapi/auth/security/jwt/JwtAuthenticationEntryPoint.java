@@ -20,7 +20,8 @@ import java.io.IOException;
 @ControllerAdvice
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException)
             throws IOException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
@@ -30,7 +31,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             InvalidCredentialsException.class,
             InvalidConfirmationException.class
     })
-    public ResponseEntity<ExceptionWrappingError> handleInvalidLoginException(ApiException exception, WebRequest request) {
+    public ResponseEntity<ExceptionWrappingError> handleInvalidLoginException(ApiException exception,
+                                                                              WebRequest request) {
         String fullPath = getFullPath(request);
 
         ExceptionWrappingError error = new ExceptionWrappingError(

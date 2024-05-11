@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import cl.tica.portfolio.recipeapi.auth.dto.request.AdditionalDataRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UpdatedUserResponse;
 import cl.tica.portfolio.recipeapi.auth.dto.response.UserConfirmationResponse;
@@ -7,7 +8,6 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.entities.UserAdditionalData;
 import cl.tica.portfolio.recipeapi.auth.enums.GenderType;
 import cl.tica.portfolio.recipeapi.auth.services.UserAdditionalDataService;
-import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,10 +33,13 @@ public class UserAdditionalDataController {
     }
 
     @Operation(summary = "Add Additional user data information.")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserConfirmationResponse.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionWrappingError.class)))
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = UserConfirmationResponse.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json", schema =
+    @Schema(implementation = ExceptionWrappingError.class)))
     @PutMapping("/additional-data")
-    public ResponseEntity<UpdatedUserResponse> updateUserAdditionalData(@Valid @RequestBody AdditionalDataRequest request) {
+    public ResponseEntity<UpdatedUserResponse> updateUserAdditionalData(
+            @Valid @RequestBody AdditionalDataRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         User user = userAdditionalDataService.findUserByUsername(auth.getName());

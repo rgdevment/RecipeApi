@@ -25,7 +25,8 @@ class UserConfirmationRepositoryTest {
 
     @Test
     void findUserConfirmationByCode() {
-        Optional<UserVerificationToken> optionalUserVerificationToken = repository.findUserConfirmationByCode("fake_code_1");
+        Optional<UserVerificationToken> optionalUserVerificationToken =
+                repository.findUserConfirmationByCode("fake_code_1");
         assertTrue(optionalUserVerificationToken.isPresent());
         assertEquals("fake_code_1", optionalUserVerificationToken.get().getCode());
         assertEquals(1, optionalUserVerificationToken.get().getId());
@@ -35,7 +36,8 @@ class UserConfirmationRepositoryTest {
     @Test
     void findUserConfirmationByCodeThrowsException() {
         Faker faker = new Faker();
-        Optional<UserVerificationToken> optionalUserVerificationToken = repository.findUserConfirmationByCode(faker.internet().uuid());
+        Optional<UserVerificationToken> optionalUserVerificationToken =
+                repository.findUserConfirmationByCode(faker.internet().uuid());
         assertThrows(NoSuchElementException.class, optionalUserVerificationToken::get);
         assertFalse(optionalUserVerificationToken.isPresent());
     }

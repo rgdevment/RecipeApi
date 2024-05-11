@@ -21,7 +21,8 @@ public class ExceptionWrappingError {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<ValidationFieldsError> errors;
 
-    public ExceptionWrappingError(int status, String code, String details, String instance, List<ValidationFieldsError> errors) {
+    public ExceptionWrappingError(int status, String code, String details, String instance,
+                                  List<ValidationFieldsError> errors) {
         this.timespan = LocalDateTime.now();
         this.status = status;
         this.code = code;
