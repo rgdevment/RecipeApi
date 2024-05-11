@@ -1,5 +1,6 @@
 package cl.tica.portfolio.recipeapi.auth.controllers;
 
+import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import cl.tica.portfolio.recipeapi.auth.dto.request.LoginRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.request.SignupRequest;
 import cl.tica.portfolio.recipeapi.auth.dto.response.RegisteredUserResponse;
@@ -8,7 +9,6 @@ import cl.tica.portfolio.recipeapi.auth.entities.User;
 import cl.tica.portfolio.recipeapi.auth.exceptions.InvalidCredentialsException;
 import cl.tica.portfolio.recipeapi.auth.security.jwt.JwtUtils;
 import cl.tica.portfolio.recipeapi.auth.services.AuthenticationService;
-import cl.tica.portfolio.recipeapi.application.models.ExceptionWrappingError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
