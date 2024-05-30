@@ -41,8 +41,8 @@ public class Recipe extends RecipeBase {
     private String title;
 
     @NotBlank
-    @Size(min = 20, max = 1000)
-    @Column(nullable = false)
+    @Size(min = 20)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String preparation;
 
     @NotNull
@@ -56,7 +56,7 @@ public class Recipe extends RecipeBase {
     @NotBlank
     @Size(min = 3, max = 100)
     @Schema(description = "Origin or regional adaptation of this recipe.")
-    private String originVersion;
+    private String countryAdaptation;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -110,8 +110,8 @@ public class Recipe extends RecipeBase {
         return servingSize;
     }
 
-    public @NotBlank @Size(min = 3, max = 100) String getOriginVersion() {
-        return originVersion;
+    public @NotBlank @Size(min = 3, max = 100) String getCountryAdaptation() {
+        return countryAdaptation;
     }
 
     public @NotNull Difficulty getDifficulty() {

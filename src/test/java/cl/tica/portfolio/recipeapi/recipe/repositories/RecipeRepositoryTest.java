@@ -26,7 +26,7 @@ class RecipeRepositoryTest extends PostgresTestBase {
         assertNotNull(recipe.getIngredients());
         assertEquals(60, recipe.getCookingTime());
         assertEquals(4, recipe.getServingSize());
-        assertEquals("Chile", recipe.getOriginVersion());
+        assertEquals("Chile", recipe.getCountryAdaptation());
         assertEquals("BEGINNER", recipe.getDifficulty().name());
     }
 
@@ -42,7 +42,7 @@ class RecipeRepositoryTest extends PostgresTestBase {
         assertNotNull(recipe.getIngredients());
         assertEquals(45, recipe.getCookingTime());
         assertEquals(2, recipe.getServingSize());
-        assertEquals("England", recipe.getOriginVersion());
+        assertEquals("England", recipe.getCountryAdaptation());
         assertEquals("INTERMEDIATE", recipe.getDifficulty().name());
     }
 }

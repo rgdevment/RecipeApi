@@ -20,7 +20,7 @@ import java.util.List;
 public class CountryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountryService.class);
 
-    private static final String URL_COUNTRY_API = "https://restcountries.com/v3.1/all";
+    private static final String URL_COUNTRY_API = "https://countries.restapi.cl/v1/all";
 
     private final RestTemplate restTemplate;
 
@@ -45,7 +45,7 @@ public class CountryService {
         }
 
         return countries.stream()
-                .map(country -> new CountryResponse(country.name().common(), country.flags().png()))
+                .map(country -> new CountryResponse(country.name(), country.flags().ico()))
                 .toList();
     }
 
