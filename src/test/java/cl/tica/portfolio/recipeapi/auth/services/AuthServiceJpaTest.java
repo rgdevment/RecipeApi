@@ -143,7 +143,6 @@ class AuthServiceJpaTest {
         verify(eventPublisher, never()).publishEvent(any());
     }
 
-
     @Test
     void registerEmailAlreadyExists() {
         User user = UserTestStub.random();
